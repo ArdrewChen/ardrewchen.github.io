@@ -1,0 +1,984 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 6.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"ardrewchen.github.io","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="讲述GPU架构的基本历史以及各个架构版本的特点，尤其对于GPU的加速原理、性能指标和今年来的GPU加速热点进行技术分析">
+<meta property="og:type" content="article">
+<meta property="og:title" content="GPU基本知识">
+<meta property="og:url" content="https://ardrewchen.github.io/2024/03/11/GPU%E5%9F%BA%E6%9C%AC%E7%9F%A5%E8%AF%86/">
+<meta property="og:site_name" content="shushu学通信">
+<meta property="og:description" content="讲述GPU架构的基本历史以及各个架构版本的特点，尤其对于GPU的加速原理、性能指标和今年来的GPU加速热点进行技术分析">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2024-03-11T13:34:41.909Z">
+<meta property="article:modified_time" content="2024-03-11T14:01:06.859Z">
+<meta property="article:author" content="Andrew Chen">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="https://ardrewchen.github.io/2024/03/11/GPU%E5%9F%BA%E6%9C%AC%E7%9F%A5%E8%AF%86/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>GPU基本知识 | shushu学通信</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">shushu学通信</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://ardrewchen.github.io/2024/03/11/GPU%E5%9F%BA%E6%9C%AC%E7%9F%A5%E8%AF%86/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/touxiang.jpg">
+      <meta itemprop="name" content="Andrew Chen">
+      <meta itemprop="description" content="对着生活哈哈大笑">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="shushu学通信">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          GPU基本知识
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2024-03-11 21:34:41 / 修改时间：22:01:06" itemprop="dateCreated datePublished" datetime="2024-03-11T21:34:41+08:00">2024-03-11</time>
+            </span>
+
+          
+            <div class="post-description">讲述GPU架构的基本历史以及各个架构版本的特点，尤其对于GPU的加速原理、性能指标和今年来的GPU加速热点进行技术分析</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h2 id="GPU架构发展历史"><a href="#GPU架构发展历史" class="headerlink" title="GPU架构发展历史"></a>GPU架构发展历史</h2><table>
+<thead>
+<tr>
+<th>架构</th>
+<th>发布年份</th>
+<th>特点</th>
+<th>典型芯片</th>
+<th>芯片制程</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Tesla</td>
+<td>2006</td>
+<td>首个通用GPU计算架构</td>
+<td>GeForce 8800 Ultra</td>
+<td></td>
+</tr>
+<tr>
+<td>Fermi</td>
+<td>2009</td>
+<td>首款采用40nm制程的GPU</td>
+<td>GeForce GTX 590</td>
+<td>40nm</td>
+</tr>
+<tr>
+<td>Kepler</td>
+<td>2012</td>
+<td>首个支持超级计算和双精度计算的GPU架构</td>
+<td>GeForce GTX 770</td>
+<td>28nm</td>
+</tr>
+<tr>
+<td>Maxwell</td>
+<td>2014</td>
+<td>在功耗效率、计算密度上获得重大提升</td>
+<td>GeForce GTX 750 Ti</td>
+<td>28nm</td>
+</tr>
+<tr>
+<td>Pascal</td>
+<td>2016</td>
+<td>大大增强了GPU的能效比和计算密度</td>
+<td>Tesla P100</td>
+<td>16nm</td>
+</tr>
+<tr>
+<td>Volta</td>
+<td>2017</td>
+<td>增加了Tensor核心</td>
+<td>Tesla V100</td>
+<td>12nm</td>
+</tr>
+</tbody></table>
+<table>
+<thead>
+<tr>
+<th>架构</th>
+<th>发布年份</th>
+<th>特点</th>
+<th>典型芯片</th>
+<th>芯片制程</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Turing</td>
+<td>2018</td>
+<td>配备了名为 RT<br> Core 的专用光线追踪处理器</td>
+<td>T1000</td>
+<td>12nm</td>
+</tr>
+<tr>
+<td>Ampere</td>
+<td>2020</td>
+<td>有史以来最大的 7nm芯片</td>
+<td>A100(7nm)</td>
+<td>7nm 8nm(30系列)</td>
+</tr>
+<tr>
+<td>Hopper</td>
+<td>2021</td>
+<td>通过Transformer引擎推进 Tensor<br> Core技术的发展</td>
+<td>H100</td>
+<td>5nm</td>
+</tr>
+<tr>
+<td>Ada Lovelace</td>
+<td>2022</td>
+<td>为光线追踪和基于 AI 的神经图形提供革命性的性能</td>
+<td>4090</td>
+<td>5nm</td>
+</tr>
+</tbody></table>
+<h2 id="GPU架构"><a href="#GPU架构" class="headerlink" title="GPU架构"></a>GPU架构</h2>
+
+<h2 id="SM（Streaming-Multiprocessor）：流式多处理器"><a href="#SM（Streaming-Multiprocessor）：流式多处理器" class="headerlink" title="SM（Streaming Multiprocessor）：流式多处理器"></a>SM（Streaming Multiprocessor）：流式多处理器</h2><p>为计算单元，作用为执行计算。每一个SM都有自己的控制单元（Control Unit），寄存器（Register），缓存（Cache），指令流水线（execution pipelines）。</p>
+
+
+<p>线程束调度器（Warp Scheduler）顾名思义是进行线程束的调度，负责将软件线程分配到计算核上；LDU（Load-Store Units）负责将值加载到内存或从内存中加载值；SFU（Special-Function Units）用来处理sin、cos、求倒数、开平方特殊函数。</p>
+<h2 id="共享内存和全局内存"><a href="#共享内存和全局内存" class="headerlink" title="共享内存和全局内存"></a>共享内存和全局内存</h2><p>共享内存（Shared memory）是位于每个流处理器组（SM）中的高速内存空间，主要作用是存放一个线程块（Block）中所有线程都会频繁访问的数据。流处理器（SP）访问它的速度仅比寄存器（Register）慢，它的速度远比全局显存快。但是他也是相当宝贵的资源，一般只有几十KByte。<br>GPU的全局内存之所以是全局的，主要是因为GPU与CPU都可以对它进行写操作。任何设备都可以通过PCI-E总线对其进行访问。GPU之间不通过CPU，直接将数据从一块GPU卡上的数据传输到另一个GPU卡上。</p>
+<h2 id="GPU加速原理"><a href="#GPU加速原理" class="headerlink" title="GPU加速原理"></a>GPU加速原理</h2><p>神经网络非常依赖矩阵运算，同时需要出色的浮点计算性能和带宽，英伟达GPU拥有成千上万个专为矩阵运算而优化的矩阵核心。</p>
+<p>计算精度基本知识</p>
+<p>FP32、TF32、FP16、BF16、FP8</p>
+
+
+
+
+<h2 id="性能指标"><a href="#性能指标" class="headerlink" title="性能指标"></a>性能指标</h2><h3 id="FLOPS（Floating-point-operations-per-second）"><a href="#FLOPS（Floating-point-operations-per-second）" class="headerlink" title="FLOPS（Floating-point operations per second）"></a>FLOPS（Floating-point operations per second）</h3><p>每秒浮点运算次数（亦称每秒峰值速度）是每秒所运行的浮点运算次数；</p>
+<p>一个MFLOPS（megaFLOPS）等于每秒一百万（10^6）次的浮点运算；<br>一个GFLOPS（gigaFLOPS）等于每秒十亿（10^9）次的浮点运算；<br>一个TFLOPS（teraFLOPS）等于每秒一兆&#x2F;一万亿（10^12）次的浮点运算；<br>一个PFLOPS（petaFLOPS）等于每秒一千兆&#x2F;一千万亿（10^15）次的浮点运算；<br>一个EFLOPS（exaFLOPS）等于每秒一百京&#x2F;一百亿亿（10^18）次的浮点运算；</p>
+<h3 id="TOPS（Tera-Operations-Per-Second）"><a href="#TOPS（Tera-Operations-Per-Second）" class="headerlink" title="TOPS（Tera Operations Per Second）"></a>TOPS（Tera Operations Per Second）</h3><p>1TOPS代表处理器每秒钟可进行一万亿次（10^12）操作。</p>
+<h3 id="H100计算性能"><a href="#H100计算性能" class="headerlink" title="H100计算性能"></a>H100计算性能</h3>
+
+<h3 id="A100计算性能’"><a href="#A100计算性能’" class="headerlink" title="A100计算性能’"></a>A100计算性能’</h3>
+
+<h3 id="游戏显卡计算性能"><a href="#游戏显卡计算性能" class="headerlink" title="游戏显卡计算性能"></a>游戏显卡计算性能</h3><p><a target="_blank" rel="noopener" href="https://www.xincanshu.com/gpu/tiantipaihang-zhuomian.html">桌面级显卡性能排行榜 - 芯参数 (xincanshu.com)</a></p>
+<h2 id="CUDA"><a href="#CUDA" class="headerlink" title="CUDA"></a>CUDA</h2><p>2006年NVIDIA推出以CUDA为核心的GPU，拉开了一个时代的序幕。CUDA是一种通用并行计算架构，而深度学习，强化学习需要大量且复杂的计算，CUDA的架构大大提高了运算速率，而且CUDA核心数量越多并行计算的能力越大，简单理解，之前需要一年的计算量，CUDA推出之后仅需一天。</p>
+<h2 id="Tensor-core"><a href="#Tensor-core" class="headerlink" title="Tensor core"></a>Tensor core</h2><p>2017年引入Tensor Core(RTX系列)，为大模型的出现奠定了坚实的基础，这也是专为深度学习所设计。深度学习所采用的核心计算主要由张量和矩阵组成，而Tensor Core为了他们专门设计了执行单元。</p>
+<p><strong>GTX到RTX</strong>：RTX20显卡采用的“图灵”架构引入了RT core计算单元，使其光线追踪性能超越上一代显卡的六倍，拥有了即时处理游戏光追的条件，NVIDIA认为这是一个划时代的进化，于是把沿用多年的“GTX”改名为“RTX”。</p>
+<p><strong>Transformer引擎</strong>：新的 Transformer 引擎结合了软件和定制的 Hopper Tensor Core 技术，专门用于加速Transformer 模型的训练和推理。</p>
+<h3 id="Tensor-core介绍"><a href="#Tensor-core介绍" class="headerlink" title="Tensor core介绍"></a>Tensor core介绍</h3><h4 id="Tensor-Core中计算详情"><a href="#Tensor-Core中计算详情" class="headerlink" title="Tensor Core中计算详情"></a>Tensor Core中计算详情</h4><ol>
+<li><p>矩阵-矩阵乘法(GEMM)(General Matrix Multiplication)是神经网络训练和推理的核心。它可以在一个时钟周期内完成两个半精度浮点矩阵的乘法(64 GEMM per clock)（此处的矩阵乘法是叉乘，<a target="_blank" rel="noopener" href="https://www.zhihu.com/question/451127498/answer/3124689887">参考链接</a>。</p>
+</li>
+<li><p>每个Tensor核心可以在一个时钟周期内完成64次浮点FMA运算(V100)。A100 Tensor Core每个时钟可以执行 256 个 FP16 FMA操作。（4 * 8 矩阵 × 8 * 8矩阵）</p>
+<p><strong>注：FMA运算（fused multiply-add）：乘法加法混合运算</strong></p>
+</li>
+<li><p>在一代tensor core和二代tensor core中，每个Tensor Core都在4×4矩阵中运行。每个Tensor核都在4×4的矩阵中运行，并执行D&#x3D;A×B+C这样的运算，其中A、B、C和D都为4×4矩阵，其中A和B为FP16矩阵，C和D可以为FP16或FP32矩阵。</p>
+</li>
+</ol>
+
+
+<h4 id="混合精度乘积累加运算"><a href="#混合精度乘积累加运算" class="headerlink" title="混合精度乘积累加运算"></a>混合精度乘积累加运算</h4><p>Tensor核心在FP16输入数据和FP32累加运算时都会发挥作用。先使用FP16乘积得到全精度乘积，然后使用FP32累加将该乘积与其他中间乘积相加。（混合精度乘积累加运算）</p>
+
+
+<h4 id="Tensor-Core发展历史"><a href="#Tensor-Core发展历史" class="headerlink" title="Tensor Core发展历史"></a>Tensor Core发展历史</h4><ul>
+<li><p><strong>Volta Tensor Core</strong>：通过 FP16 和 FP32 下的混合精度矩阵乘法提供了突破性的性能，配备Volta Tensor核心的Volta V100对于矩阵乘法的计算速度比Pascal P100快12倍。</p>
+</li>
+<li><p><strong>Turing Tensor Core</strong>：Turing Tensor 核心设计添加了INT8、INT4和INT1精度模式，其矩阵计算方式与Volta相同。（<strong>此处吞吐量可认为与计算速度等同</strong>）</p>
+</li>
+<li><p><strong>Ampere Tensor Core</strong>：Ampere Tensor核心增加TF32、BF16和FP64模式。相比于Volta Tensor核心，Ampere中的D&#x3D;A×B+C，其中 C 和 D 是m×n矩阵，A是m×k 矩阵，B是k×n矩阵。与传统的FP32相比，A100的FP16吞吐量是V100（Volta）的20倍,TF32是FP32的5倍，FP6为2.5倍，INT8为20倍。利用了<strong>深度学习网络中的细粒度结构化稀疏性</strong>，使标准 Tensor核心操作的性能提高了一倍。</p>
+</li>
+<li><p><strong>Hopper Tensor Core</strong>：Hopper Tensor核心增加了FP8格式，可加速 AI 训练和推理。o采用新的Transformer引擎可结合使用FP8和FP16 精度，减少内存使用并提高性能，同时仍能保持大型语言模型和其他模型的准确性。与Ampere Tensor核心相比，Hopper Tensor核心FP16吞吐量为快3倍，若使用FP8达到6倍，TF32、FP64和INT8为3倍。</p>
+</li>
+</ul>
+<p>显卡计算能力</p>
+<h3 id="计算能力对应"><a href="#计算能力对应" class="headerlink" title="计算能力对应"></a>计算能力对应</h3><table>
+<thead>
+<tr>
+<th>显卡类型</th>
+<th>计算能力</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>RTX 4080</td>
+<td>8.9</td>
+</tr>
+<tr>
+<td>RTX 3080</td>
+<td>8.6</td>
+</tr>
+<tr>
+<td>RTX 2080</td>
+<td>7.5</td>
+</tr>
+<tr>
+<td>RTX 2060</td>
+<td>7.5</td>
+</tr>
+<tr>
+<td>RTX1080Ti</td>
+<td>6.1</td>
+</tr>
+</tbody></table>
+<p>数据来源：   <a target="_blank" rel="noopener" href="https://developer.nvidia.com/cuda-gpus#">CUDA GPUs - Compute Capability | NVIDIA Developer</a></p>
+<h3 id="计算能力详解"><a href="#计算能力详解" class="headerlink" title="计算能力详解"></a>计算能力详解</h3><table>
+<thead>
+<tr>
+<th>功能支持</th>
+<th>5.0,5.2</th>
+<th>5.3</th>
+<th>6.x</th>
+<th>7.x</th>
+<th>8.x</th>
+<th>9.0</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>全局内存 int32</td>
+<td>Y</td>
+<td>Y</td>
+<td>Y</td>
+<td>Y</td>
+<td>Y</td>
+<td>Y</td>
+</tr>
+<tr>
+<td>共享内存 int32</td>
+<td>Y</td>
+<td>Y</td>
+<td>Y</td>
+<td>Y</td>
+<td>Y</td>
+<td>Y</td>
+</tr>
+<tr>
+<td>全局内存 int64</td>
+<td>Y</td>
+<td>Y</td>
+<td>Y</td>
+<td>Y</td>
+<td>Y</td>
+<td>Y</td>
+</tr>
+<tr>
+<td>共享内存 int64</td>
+<td>Y</td>
+<td>Y</td>
+<td>Y</td>
+<td>Y</td>
+<td>Y</td>
+<td>Y</td>
+</tr>
+<tr>
+<td>全局内存 int128</td>
+<td>N</td>
+<td>Y</td>
+<td>Y</td>
+<td>Y</td>
+<td>Y</td>
+<td>Y</td>
+</tr>
+<tr>
+<td>共享内存 int128</td>
+<td>N</td>
+<td>Y</td>
+<td>Y</td>
+<td>Y</td>
+<td>Y</td>
+<td>Y</td>
+</tr>
+<tr>
+<td>共享内存 原子加 float32</td>
+<td>Y</td>
+<td>Y</td>
+<td>Y</td>
+<td>Y</td>
+<td>Y</td>
+<td>Y</td>
+</tr>
+<tr>
+<td>共享内存 原子加 float64</td>
+<td>N</td>
+<td>N</td>
+<td>Y</td>
+<td>Y</td>
+<td>Y</td>
+<td>Y</td>
+</tr>
+<tr>
+<td>全局内存 原子加 float2或float4</td>
+<td>N</td>
+<td>N</td>
+<td>N</td>
+<td>N</td>
+<td>N</td>
+<td>Y</td>
+</tr>
+<tr>
+<td>半精度浮点数</td>
+<td>N</td>
+<td>Y</td>
+<td>Y</td>
+<td>Y</td>
+<td>Y</td>
+<td>Y</td>
+</tr>
+<tr>
+<td>Bfloat16</td>
+<td>N</td>
+<td>N</td>
+<td>N</td>
+<td>N</td>
+<td>Y</td>
+<td>Y</td>
+</tr>
+</tbody></table>
+<h4 id="6-x"><a href="#6-x" class="headerlink" title="6.x"></a>6.x</h4><ul>
+<li><p>64 个（计算能力 6.0）或 128 个（6.1 和 6.2）个用于算术运算的 CUDA 内核，</p>
+</li>
+<li><p>16 个 （6.0） 或 32 个（6.1 和 6.2）个特殊函数单元，用于单精度浮点超越函数（ transcendental functions,）</p>
+</li>
+<li><p>2 个 （6.0） 或 4 个（6.1 和 6.2）翘曲调度器（warp schedulers.）。</p>
+</li>
+</ul>
+<h4 id="7-x"><a href="#7-x" class="headerlink" title="7.x"></a>7.x</h4><ul>
+<li><p>64 个 FP32 内核，用于单精度算术运算，</p>
+</li>
+<li><p>32 个 FP64 内核，用于双精度算术运算，</p>
+</li>
+<li><p>64 个 INT32 内核，用于整数数学运算，</p>
+</li>
+<li><p>8 个混合精度的 Tensor Core，用于深度学习矩阵运算</p>
+</li>
+<li><p>16 个特殊函数单元，用于单精度浮点超越函数，</p>
+</li>
+<li><p>4 个 warp 调度器。</p>
+</li>
+</ul>
+<h4 id="8-x"><a href="#8-x" class="headerlink" title="8.x"></a>8.x</h4><ul>
+<li><p>64 个 FP32 内核，用于计算能力为 8.0 的设备中的单精度算术运算，以及计算能力为 128.32、8.6 和 8.7 的设备中的 8 个 FP9 内核，</p>
+</li>
+<li><p>32 个 FP64 内核，用于计算能力 8.0 的设备中的双精度算术运算，以及计算能力为 2.64、8.6 和 8.7 的设备中的 8 个 FP9 内核</p>
+</li>
+<li><p>64 个 INT32 内核，用于整数数学运算，</p>
+</li>
+<li><p>4 个混合精度的第三代 Tensor Core，支持半精度 （fp16）、<code>__nv_bfloat16</code>, <code>tf32</code>, 亚字节（sub-byte）和双精度 （fp64） 矩阵算法，用于计算能力 8.0、8.6 和 8.7（详见 <a target="_blank" rel="noopener" href="https://docs.nvidia.com/cuda/cuda-c-programming-guide/index.html#wmma">Warp 矩阵函数</a>）()</p>
+</li>
+<li><p>4 个混合精度的第四代 Tensor Core，支持 fp8<code>,</code> fp16<code>,</code> __nv_bfloat16<code>,</code> tf32<code>和 8.9 的计算能力fp64（详见 [Warp 矩阵函数](https://docs.nvidia.com/cuda/cuda-c-programming-guide/index.html#wmma)），</code></p>
+</li>
+<li><p>16 个特殊函数单元，用于单精度浮点超越函数，</p>
+</li>
+<li><p>4 个 warp 调度器。</p>
+</li>
+</ul>
+<p><a target="_blank" rel="noopener" href="https://arxiv.org/abs/1710.03740">混合</a>精度训练通过以半精度格式执行运算来提供显着的计算加速，同时以单精度存储最少的信息，以在网络的关键部分保留尽可能多的信息。自从在 Volta 和 Turing 架构中引入 <a target="_blank" rel="noopener" href="https://developer.nvidia.com/tensor-cores">Tensor Core</a> 以来，通过切换到混合精度，训练速度得到了显著提升——在算术强度最高的模型架构上，整体速度提高了 3 倍。</p>
+<h2 id="各显卡性能对比"><a href="#各显卡性能对比" class="headerlink" title="各显卡性能对比"></a>各显卡性能对比</h2><table>
+<thead>
+<tr>
+<th>显卡</th>
+<th>cuda core</th>
+<th>tensor core</th>
+<th>fp16</th>
+<th>fp32</th>
+<th>fp64</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>2060</td>
+<td>1920</td>
+<td>240</td>
+<td>12.90TFLOPS</td>
+<td>6.451TFLOPS</td>
+<td>201.6GFLOPS</td>
+</tr>
+<tr>
+<td>2080</td>
+<td>2944</td>
+<td>368</td>
+<td>20.14TFLOPS</td>
+<td>10.07TFLOPS</td>
+<td>314.6GFLOPS</td>
+</tr>
+<tr>
+<td>3080</td>
+<td>8960(12GB)&#x2F;8704(10GB)</td>
+<td>272</td>
+<td>29.77TFLOPS</td>
+<td>29.77TFLOPS</td>
+<td>465.1GFLOPS</td>
+</tr>
+<tr>
+<td>4080</td>
+<td>9728</td>
+<td>304</td>
+<td>48.74TFLOPS</td>
+<td>48.74TFLOPS</td>
+<td>761.5GFLOPS</td>
+</tr>
+</tbody></table>
+<p> 数据来源：（30系以前）<a target="_blank" rel="noopener" href="https://www.xincanshu.com/gpu/">芯参数GPU显卡性能数据库</a></p>
+<p>                        4080： <a target="_blank" rel="noopener" href="https://developer.nvidia.com/cuda-gpus#">CUDA GPUs - Compute Capability | NVIDIA Developer</a></p>
+<h2 id="NVlink"><a href="#NVlink" class="headerlink" title="NVlink"></a>NVlink</h2><h2 id="HBM"><a href="#HBM" class="headerlink" title="HBM"></a>HBM</h2><h2 id="H100-VS-A100"><a href="#H100-VS-A100" class="headerlink" title="H100 VS A100"></a>H100 VS A100</h2>
+
+
+
+<p>数据来源：<a target="_blank" rel="noopener" href="https://resources.nvidia.com/en-us-tensor-core/gtc22-whitepaper-hopper">NVIDIA H100 Tensor Core GPU Architecture Overview</a></p>
+<h2 id="计算峰值"><a href="#计算峰值" class="headerlink" title="计算峰值"></a>计算峰值</h2><h3 id="理论值"><a href="#理论值" class="headerlink" title="理论值"></a>理论值</h3>
+
+<h3 id="实测值"><a href="#实测值" class="headerlink" title="实测值"></a>实测值</h3>
+
+<h2 id="问题集锦"><a href="#问题集锦" class="headerlink" title="问题集锦"></a>问题集锦</h2><h3 id="Q1：计算显卡（特斯拉）与游戏显卡是否有支持计算精度的差别"><a href="#Q1：计算显卡（特斯拉）与游戏显卡是否有支持计算精度的差别" class="headerlink" title="Q1：计算显卡（特斯拉）与游戏显卡是否有支持计算精度的差别?"></a>Q1：计算显卡（特斯拉）与游戏显卡是否有支持计算精度的差别?</h3><table>
+<thead>
+<tr>
+<th><a target="_blank" rel="noopener" href="https://developer.nvidia.com/cuda-gpus">CUDA Compute Capability</a></th>
+<th>Example Device</th>
+<th>TF32</th>
+<th>FP32</th>
+<th>FP16</th>
+<th>INT8</th>
+<th>FP16 Tensor Cores</th>
+<th>INT8 Tensor Cores</th>
+<th>DLA</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>9.0</td>
+<td>NVIDIA H100</td>
+<td>Yes</td>
+<td>Yes</td>
+<td>Yes</td>
+<td>Yes</td>
+<td>Yes</td>
+<td>Yes</td>
+<td>No</td>
+</tr>
+<tr>
+<td>8.9</td>
+<td>NVIDIA RTX 4090 4080</td>
+<td>Yes</td>
+<td>Yes</td>
+<td>Yes</td>
+<td>Yes</td>
+<td>Yes</td>
+<td>Yes</td>
+<td>No</td>
+</tr>
+<tr>
+<td>8.7</td>
+<td>NVIDIA DRIVE AGX Orin™</td>
+<td>Yes</td>
+<td>Yes</td>
+<td>Yes</td>
+<td>Yes</td>
+<td>Yes</td>
+<td>Yes</td>
+<td>Yes</td>
+</tr>
+<tr>
+<td>8.6</td>
+<td>3080</td>
+<td>Yes</td>
+<td>Yes</td>
+<td>Yes</td>
+<td>Yes</td>
+<td>Yes</td>
+<td>Yes</td>
+<td>No</td>
+</tr>
+<tr>
+<td>8.0</td>
+<td>NVIDIA A100&#x2F;GA100 GPU</td>
+<td>Yes</td>
+<td>Yes</td>
+<td>Yes</td>
+<td>Yes</td>
+<td>Yes</td>
+<td>Yes</td>
+<td>No</td>
+</tr>
+<tr>
+<td>7.5</td>
+<td>2060 2080</td>
+<td>No</td>
+<td>Yes</td>
+<td>Yes</td>
+<td>Yes</td>
+<td>Yes</td>
+<td>Yes</td>
+<td>No</td>
+</tr>
+<tr>
+<td>7.2</td>
+<td>Jetson AGX Xavier</td>
+<td>No</td>
+<td>Yes</td>
+<td>Yes</td>
+<td>Yes</td>
+<td>Yes</td>
+<td>Yes</td>
+<td>Yes</td>
+</tr>
+<tr>
+<td>7.0</td>
+<td>NVIDIA V100</td>
+<td>No</td>
+<td>Yes</td>
+<td>Yes</td>
+<td>Yes</td>
+<td>Yes</td>
+<td>No</td>
+<td>No</td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+</tbody></table>
+<table>
+<thead>
+<tr>
+<th>显卡类型</th>
+<th align="center">计算能力</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>RTX 4080(Ada)</td>
+<td align="center">8.9</td>
+</tr>
+<tr>
+<td>RTX 3080(Ampere)</td>
+<td align="center">8.6</td>
+</tr>
+<tr>
+<td>RTX 2080(Turing)</td>
+<td align="center">7.5</td>
+</tr>
+<tr>
+<td>RTX 2060(Turing)</td>
+<td align="center">7.5</td>
+</tr>
+<tr>
+<td>RTX1080Ti(Pascal)</td>
+<td align="center">6.1</td>
+</tr>
+</tbody></table>
+<p>不同tensor core支持的计算精度</p>
+
+
+<p>注：NVIDIA DLA（Deep Learning Accelerator–深度学习加速器）是一款针对深度学习操作的固定功能加速器引擎。 DLA 旨在对卷积神经网络进行全硬件加速。 DLA支持卷积、反卷积、全连接、激活、池化、批量归一化等各种层，DLA不支持Explicit Quantization 。</p>
+<p>计算精度核心差距</p>
+<ul>
+<li><p>64 个 FP32 内核，用于计算能力为 8.0 的设备中的单精度算术运算，以及计算能力为 8.6、8.7 和 8.9 的设备中的 128 个 FP32 内核，</p>
+</li>
+<li><p>32 个 FP64 内核，用于计算能力 8.0 的设备中的双精度算术运算，以及计算能力为 8.6、8.7 和 8.9 的设备中的 2 个 FP64 内核</p>
+</li>
+</ul>
+<p>结论：对于游戏显卡和特斯拉计算卡，是否支持精度需要看其计算能力的不同，以八代计算能力为例，A100的8.0 3080的8.6,在INT8 FP16的支持程度是相同的，但是具体计算性能可能有所不同，计算卡和游戏卡最明显的差距是在双精度（fp64）计算上，同时，在第八代计算上，8.0、8.5、8.6同样说明支持第三代tensor core，也就是说，他们支持的计算精度一直。</p>
+<h3 id="Q2-不同计算精度支持的计算精度汇总"><a href="#Q2-不同计算精度支持的计算精度汇总" class="headerlink" title="Q2 :不同计算精度支持的计算精度汇总"></a>Q2 :不同计算精度支持的计算精度汇总</h3><p>6.x </p>
+<ul>
+<li><p>64 个（计算能力 6.0）或 128 个（6.1 和 6.2）个用于算术运算的 CUDA 内核，</p>
+</li>
+<li><p>16 个 （6.0） 或 32 个（6.1 和 6.2）个特殊函数单元，用于单精度浮点超越函数，</p>
+</li>
+<li><p>2 个 （6.0） 或 4 个（6.1 和 6.2）warp调度器。</p>
+</li>
+</ul>
+<p>7.x</p>
+<ul>
+<li><p>64 个 FP32 内核，用于单精度算术运算，</p>
+</li>
+<li><p>32 个 FP64 内核，用于双精度算术运算，<a target="_blank" rel="noopener" href="https://docs.nvidia.com/cuda/cuda-c-programming-guide/index.html#fn35">34</a></p>
+</li>
+<li><p>64 个 INT32 内核，用于整数数学运算，</p>
+</li>
+<li><p>8 个混合精度的 Tensor Core，用于深度学习矩阵运算</p>
+</li>
+<li><p>16 个用于单精度浮点超越函数的特殊函数单元，</p>
+</li>
+<li><p>4 个 warp 调度器。</p>
+</li>
+</ul>
+<p>8.x</p>
+<ul>
+<li><p>64 个 FP32 内核，用于计算能力为 8.0 的设备中的单精度算术运算，以及计算能力为 8.6、8.7 和 8.9 的设备中的 128 个 FP32 内核，</p>
+</li>
+<li><p>32 个 FP64 内核，用于计算能力 8.0 的设备中的双精度算术运算，以及计算能力为 8.6、8.7 和 8.9 的设备中的 2 个 FP64 内核</p>
+</li>
+<li><p>64 个 INT32 内核，用于整数数学运算，</p>
+</li>
+<li><p>4 个混合精度的第三代 Tensor Core，支持半精度 （fp16）、、亚字节和双精度 （fp64） 矩阵算法，用于计算能力 8.0、8.6 和 8.7（详见 <a target="_blank" rel="noopener" href="https://docs.nvidia.com/cuda/cuda-c-programming-guide/index.html#wmma">Warp 矩阵函数</a>），<code>__nv_bfloat16``tf32</code></p>
+</li>
+<li><p>4 个混合精度的第四代 Tensor Core，支持 、 、 、 亚字节和 8.9 的计算能力（详见 <a target="_blank" rel="noopener" href="https://docs.nvidia.com/cuda/cuda-c-programming-guide/index.html#wmma">Warp 矩阵函数</a>），<code>fp8``fp16``__nv_bfloat16``tf32``fp64</code></p>
+</li>
+<li><p>16 个用于单精度浮点超越函数的特殊函数单元，</p>
+</li>
+<li><p>4 个 warp 调度器。</p>
+</li>
+</ul>
+<h3 id="Q3：查看cuda多线程和解码器的排队问题不同SM之间调用的冲突问题"><a href="#Q3：查看cuda多线程和解码器的排队问题不同SM之间调用的冲突问题" class="headerlink" title="Q3：查看cuda多线程和解码器的排队问题不同SM之间调用的冲突问题"></a>Q3：查看cuda多线程和解码器的排队问题不同SM之间调用的冲突问题</h3><p>SM如何管理调度线程块呢？首先我们知道线程块中的线程数量是不确定的，所以不能直接以线程块为处理单位。这时引入了<strong>wrap线程束概念</strong>，每32个线程为一组，被称为线程束。</p>
+<p><strong>有多少个线程束调度器就能同时执行多少个线程束</strong>，Fermi架构有两个线程束调度器，Kepler架构有四个线程束调度器。</p>
+<p>线程束是<strong>并行处理的基本单元</strong>，<strong>线程束中的所有线程同时执行相同的指令</strong>！<strong>线程束的执行方式被称为</strong>单指令多线程</p>
+<ul>
+<li>每个线程都有自己的指令地址计数器</li>
+<li>每个线程都有自己的寄存器状态</li>
+<li>每个线程可以有一个独立的执行路径（单指令多数据，那么全部执行，那么全部不执行，不支持if语句。而单指令多线程可以部分执行）</li>
+</ul>
+<p>设想一个非常简单的if语句<code>if (cond) &#123;……&#125; else &#123;……&#125;</code>。假设在一个线程束中有16个线程cond为true，但对于其他16个来说cond为false。这意味着一半的线程束需要执行if语句块中的指令，而另一半需要执行else语句块中的指令。 在同一线程束中的线程执行不同的指令，被称为<strong>线程束分化。</strong></p>
+<p>由于线程束是<strong>单指令多线程</strong>的执行，所以不支持16个线程执行if语句块，另外16个线程执行else语句块。那么当发生线程束分化时，线程束中16个线程执行if，冻结另外16个线程；然后，16个线程执行else，冻结另外16个线程。if语句变成了两步走，线程束分化会导致性能明显地下降。</p>
+<h4 id="线程网格-grid-、线程块-block-、线程束-warp"><a href="#线程网格-grid-、线程块-block-、线程束-warp" class="headerlink" title="线程网格(grid)、线程块(block)、线程束(warp)"></a>线程网格(grid)、线程块(block)、线程束(warp)</h4><p>线程束（warp）:线程束是GPU的基本执行单位。每个线程束中的线程同时执行，在理想情况下，获得当前指令只需要一次访存，然后将指令广播到这个线程束所占用的所有SP中。当前，GPU上的一个线程束的大小为32。</p>
+<p><strong>Grid，Block，thread都是线程的组织形式，最小的逻辑单位是一个thread，最小的硬件执行单位是thread warp，若干个thread组成一个block，block被加载到SM上运行，多个block组成一个Grid。</strong></p>
+<p>block是常驻在SM上的，一个SM可能有一个或者多个Block，具体根据资源占用分析。</p>
+<p>kernel(指的是在GPU上执行的函数)在执行时会以一个grid为整体，划分若干个block，然后将block分配给SM进行运算。block中的线程以32个为一组，称为warp，进行分组计算。block会以连续的方式划分warp。例如，如果一个block由64个thread，则分为2组warp。0-31为warp0，32-63为warp1.如果block不是32的倍数，则多余的thread独立分成一组warp。例如block有65个thread，则最后一个thread单独为一个warp，那么此时这个warp中的其他thread处于非活动状态。</p>
+<ul>
+<li>在一个block内的warp次序是未定义的，但通过协调全局或者共享内存的存取，它们可以同步的执行。如果一个通过warp 线程执行的指令写入全局或共享内存的同一位置，写的次序是未定义的。</li>
+<li>在一个grid内的block次序是未定义的，并且在block之间不存在同步机制，因此来自同一个grid的二个不同block的线程不能通过全局内存彼此安全地通讯。</li>
+</ul>
+<h4 id="线程块的调度"><a href="#线程块的调度" class="headerlink" title="线程块的调度"></a>线程块的调度</h4><p>在线程块调度者为每个SM初始化分配了线程块之后，就会处于闲置状态，直到有线程块执行完毕。当线程块执行完毕之后就会从SM中撤出，并释放其占用的资源。由于线程块都是相同的大小，因此一个线程块从SM中撤出后另一个在等待队列中的线程块就会被调度执行。所有的线程块的执行顺序是随机、不确定的。因此，当我们在编写一个程序解决一个问题的时候，不要假定线程块的执行顺序，因为线程块根本就不会按照我们所想的顺序去执行。</p>
+<p><strong>保证在每个GPU中，线程块的数目都是SM数目的整数倍，以此提高设备的利用率。</strong></p>
+<ul>
+<li>一个线程块只能分配到一个SM上（不存在一个线程块分配到多个SM上）</li>
+<li>多个线程块可以分配到同一个SM上（因为有可能大多数SM忙，少数SM空闲）</li>
+</ul>
+
+
+<ul>
+<li>每个线程都有自己的指令地址计数器</li>
+<li>每个线程都有自己的寄存器状态</li>
+<li>每个线程可以有一个独立的执行路径（单指令多数据，那么全部执行，那么全部不执行，不支持if语句。而单指令多线程可以部分执行）</li>
+</ul>
+
+
+
+
+<h4 id="参考文献"><a href="#参考文献" class="headerlink" title="参考文献"></a>参考文献</h4><p><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/462991566">cuda编程笔记（三）：硬件线程组织结构 - 知乎 (zhihu.com)</a></p>
+<p><a target="_blank" rel="noopener" href="https://www.cnblogs.com/myrosy/p/17377884.html">线程网格、线程块以及线程 - 人生逆旅，我亦行人 - 博客园 (cnblogs.com)</a>                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     </p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2024/03/11/Git%E4%BD%BF%E7%94%A8%E6%8A%80%E5%B7%A7/" rel="prev" title="Git使用技巧">
+      <i class="fa fa-chevron-left"></i> Git使用技巧
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#GPU%E6%9E%B6%E6%9E%84%E5%8F%91%E5%B1%95%E5%8E%86%E5%8F%B2"><span class="nav-number">1.</span> <span class="nav-text">GPU架构发展历史</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#GPU%E6%9E%B6%E6%9E%84"><span class="nav-number">2.</span> <span class="nav-text">GPU架构</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#SM%EF%BC%88Streaming-Multiprocessor%EF%BC%89%EF%BC%9A%E6%B5%81%E5%BC%8F%E5%A4%9A%E5%A4%84%E7%90%86%E5%99%A8"><span class="nav-number">3.</span> <span class="nav-text">SM（Streaming Multiprocessor）：流式多处理器</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%85%B1%E4%BA%AB%E5%86%85%E5%AD%98%E5%92%8C%E5%85%A8%E5%B1%80%E5%86%85%E5%AD%98"><span class="nav-number">4.</span> <span class="nav-text">共享内存和全局内存</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#GPU%E5%8A%A0%E9%80%9F%E5%8E%9F%E7%90%86"><span class="nav-number">5.</span> <span class="nav-text">GPU加速原理</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%80%A7%E8%83%BD%E6%8C%87%E6%A0%87"><span class="nav-number">6.</span> <span class="nav-text">性能指标</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#FLOPS%EF%BC%88Floating-point-operations-per-second%EF%BC%89"><span class="nav-number">6.1.</span> <span class="nav-text">FLOPS（Floating-point operations per second）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#TOPS%EF%BC%88Tera-Operations-Per-Second%EF%BC%89"><span class="nav-number">6.2.</span> <span class="nav-text">TOPS（Tera Operations Per Second）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#H100%E8%AE%A1%E7%AE%97%E6%80%A7%E8%83%BD"><span class="nav-number">6.3.</span> <span class="nav-text">H100计算性能</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#A100%E8%AE%A1%E7%AE%97%E6%80%A7%E8%83%BD%E2%80%99"><span class="nav-number">6.4.</span> <span class="nav-text">A100计算性能’</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%B8%B8%E6%88%8F%E6%98%BE%E5%8D%A1%E8%AE%A1%E7%AE%97%E6%80%A7%E8%83%BD"><span class="nav-number">6.5.</span> <span class="nav-text">游戏显卡计算性能</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#CUDA"><span class="nav-number">7.</span> <span class="nav-text">CUDA</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Tensor-core"><span class="nav-number">8.</span> <span class="nav-text">Tensor core</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Tensor-core%E4%BB%8B%E7%BB%8D"><span class="nav-number">8.1.</span> <span class="nav-text">Tensor core介绍</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Tensor-Core%E4%B8%AD%E8%AE%A1%E7%AE%97%E8%AF%A6%E6%83%85"><span class="nav-number">8.1.1.</span> <span class="nav-text">Tensor Core中计算详情</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%B7%B7%E5%90%88%E7%B2%BE%E5%BA%A6%E4%B9%98%E7%A7%AF%E7%B4%AF%E5%8A%A0%E8%BF%90%E7%AE%97"><span class="nav-number">8.1.2.</span> <span class="nav-text">混合精度乘积累加运算</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Tensor-Core%E5%8F%91%E5%B1%95%E5%8E%86%E5%8F%B2"><span class="nav-number">8.1.3.</span> <span class="nav-text">Tensor Core发展历史</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%AE%A1%E7%AE%97%E8%83%BD%E5%8A%9B%E5%AF%B9%E5%BA%94"><span class="nav-number">8.2.</span> <span class="nav-text">计算能力对应</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%AE%A1%E7%AE%97%E8%83%BD%E5%8A%9B%E8%AF%A6%E8%A7%A3"><span class="nav-number">8.3.</span> <span class="nav-text">计算能力详解</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#6-x"><span class="nav-number">8.3.1.</span> <span class="nav-text">6.x</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#7-x"><span class="nav-number">8.3.2.</span> <span class="nav-text">7.x</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#8-x"><span class="nav-number">8.3.3.</span> <span class="nav-text">8.x</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%90%84%E6%98%BE%E5%8D%A1%E6%80%A7%E8%83%BD%E5%AF%B9%E6%AF%94"><span class="nav-number">9.</span> <span class="nav-text">各显卡性能对比</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#NVlink"><span class="nav-number">10.</span> <span class="nav-text">NVlink</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#HBM"><span class="nav-number">11.</span> <span class="nav-text">HBM</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#H100-VS-A100"><span class="nav-number">12.</span> <span class="nav-text">H100 VS A100</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%AE%A1%E7%AE%97%E5%B3%B0%E5%80%BC"><span class="nav-number">13.</span> <span class="nav-text">计算峰值</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%90%86%E8%AE%BA%E5%80%BC"><span class="nav-number">13.1.</span> <span class="nav-text">理论值</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%9E%E6%B5%8B%E5%80%BC"><span class="nav-number">13.2.</span> <span class="nav-text">实测值</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%97%AE%E9%A2%98%E9%9B%86%E9%94%A6"><span class="nav-number">14.</span> <span class="nav-text">问题集锦</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Q1%EF%BC%9A%E8%AE%A1%E7%AE%97%E6%98%BE%E5%8D%A1%EF%BC%88%E7%89%B9%E6%96%AF%E6%8B%89%EF%BC%89%E4%B8%8E%E6%B8%B8%E6%88%8F%E6%98%BE%E5%8D%A1%E6%98%AF%E5%90%A6%E6%9C%89%E6%94%AF%E6%8C%81%E8%AE%A1%E7%AE%97%E7%B2%BE%E5%BA%A6%E7%9A%84%E5%B7%AE%E5%88%AB"><span class="nav-number">14.1.</span> <span class="nav-text">Q1：计算显卡（特斯拉）与游戏显卡是否有支持计算精度的差别?</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Q2-%E4%B8%8D%E5%90%8C%E8%AE%A1%E7%AE%97%E7%B2%BE%E5%BA%A6%E6%94%AF%E6%8C%81%E7%9A%84%E8%AE%A1%E7%AE%97%E7%B2%BE%E5%BA%A6%E6%B1%87%E6%80%BB"><span class="nav-number">14.2.</span> <span class="nav-text">Q2 :不同计算精度支持的计算精度汇总</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Q3%EF%BC%9A%E6%9F%A5%E7%9C%8Bcuda%E5%A4%9A%E7%BA%BF%E7%A8%8B%E5%92%8C%E8%A7%A3%E7%A0%81%E5%99%A8%E7%9A%84%E6%8E%92%E9%98%9F%E9%97%AE%E9%A2%98%E4%B8%8D%E5%90%8CSM%E4%B9%8B%E9%97%B4%E8%B0%83%E7%94%A8%E7%9A%84%E5%86%B2%E7%AA%81%E9%97%AE%E9%A2%98"><span class="nav-number">14.3.</span> <span class="nav-text">Q3：查看cuda多线程和解码器的排队问题不同SM之间调用的冲突问题</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%BA%BF%E7%A8%8B%E7%BD%91%E6%A0%BC-grid-%E3%80%81%E7%BA%BF%E7%A8%8B%E5%9D%97-block-%E3%80%81%E7%BA%BF%E7%A8%8B%E6%9D%9F-warp"><span class="nav-number">14.3.1.</span> <span class="nav-text">线程网格(grid)、线程块(block)、线程束(warp)</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%BA%BF%E7%A8%8B%E5%9D%97%E7%9A%84%E8%B0%83%E5%BA%A6"><span class="nav-number">14.3.2.</span> <span class="nav-text">线程块的调度</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%8F%82%E8%80%83%E6%96%87%E7%8C%AE"><span class="nav-number">14.3.3.</span> <span class="nav-text">参考文献</span></a></li></ol></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Andrew Chen"
+      src="/images/touxiang.jpg">
+  <p class="site-author-name" itemprop="name">Andrew Chen</p>
+  <div class="site-description" itemprop="description">对着生活哈哈大笑</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">2</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2024</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Andrew Chen</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a> 强力驱动
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>
