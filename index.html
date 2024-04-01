@@ -166,7 +166,7 @@
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
           
-            <a href="/2024/04/01/MATLAB%E7%B3%BB%E5%88%97%E7%AC%94%E8%AE%B0/" class="post-title-link" itemprop="url">未命名</a>
+            <a href="/2024/04/01/MATLAB%E7%B3%BB%E5%88%97%E7%AC%94%E8%AE%B0/" class="post-title-link" itemprop="url">GPU基本知识</a>
         </h2>
 
         <div class="post-meta">
@@ -175,16 +175,23 @@
                 <i class="far fa-calendar"></i>
               </span>
               <span class="post-meta-item-text">发表于</span>
+              
 
-              <time title="创建时间：2024-04-01 23:51:45" itemprop="dateCreated datePublished" datetime="2024-04-01T23:51:45+08:00">2024-04-01</time>
+              <time title="创建时间：2024-04-01 23:51:45 / 修改时间：23:58:09" itemprop="dateCreated datePublished" datetime="2024-04-01T23:51:45+08:00">2024-04-01</time>
             </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2024-03-30 23:41:00" itemprop="dateModified" datetime="2024-03-30T23:41:00+08:00">2024-03-30</time>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
               </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E7%9F%A5%E8%AF%86/" itemprop="url" rel="index"><span itemprop="name">知识</span></a>
+                </span>
+                  ，
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E7%9F%A5%E8%AF%86/MATLAB/" itemprop="url" rel="index"><span itemprop="name">MATLAB</span></a>
+                </span>
+            </span>
 
           
 
@@ -197,67 +204,15 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <h1 id="MATLAB系列笔记"><a href="#MATLAB系列笔记" class="headerlink" title="MATLAB系列笔记"></a>MATLAB系列笔记</h1><h2 id="基本操作与矩阵操作"><a href="#基本操作与矩阵操作" class="headerlink" title="基本操作与矩阵操作"></a>基本操作与矩阵操作</h2><h3 id="命令行"><a href="#命令行" class="headerlink" title="命令行"></a>命令行</h3><ol>
-<li>作用：输入操作命令，输出结果。</li>
-<li>运算规则： 常见的四则运算规则（<code>+</code> <code>-</code> <code>*</code> <code>/</code> <code>^</code>）。</li>
-<li><code>help</code>命令： 命令行输入。</li>
-</ol>
-<figure class="highlight matlab"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">help 需要查询的函数名</span><br></pre></td></tr></table></figure>
-
-<ol start="4">
-<li><code>ln</code>代表指令：<code>log</code>。</li>
-</ol>
-<h3 id="变量"><a href="#变量" class="headerlink" title="变量"></a>变量</h3><ol>
-<li>可以在工作区观察每个变量的数值。</li>
-<li>变量的开头不能是数字。</li>
-<li><code>who</code>查看当前变量，<code>whos</code>查看当前变量具体性质。</li>
-<li>特殊变量和常量：<code>i</code>和<code>j</code>表复数，<code>Inf</code>无限大，<code>eps</code>无限小，<code>pi</code>表示圆周率 （pai）。</li>
-<li>变量命名具有高优先级。</li>
-<li><a target="_blank" rel="noopener" href="https://www.cnblogs.com/shenxiaolin/p/6807826.html">变量类型。</a></li>
-</ol>
-<h3 id="数组（向量与矩阵）"><a href="#数组（向量与矩阵）" class="headerlink" title="数组（向量与矩阵）"></a>数组（向量与矩阵）</h3><ol>
-<li>行向量：<code>[1 2 3 4]</code>，列向量：<code>[1;2;3;4]</code>，矩阵：<code>[1 21 6; 5 17 9; 31 2 7]</code>，这里的<code>;</code>可类似于换行符号。</li>
-<li>数组索引：向量<code>a(1)</code> 矩阵<code>A(1,2)</code>or<code>A(2)</code>每一列按列数下去。</li>
-<li><code>Colon Operator</code>:<code>A=j:k</code>（j到k逐次增加）;<code>A=j:i:k</code>（j到k按i增加）。</li>
-<li>矩阵合并的操作：使用<code>A=[B C]</code>  B C行往后合并；<code>A=[B;C]</code>B和C列往后合并。</li>
-<li>矩阵四则运算：同线性代数的四则运算。特殊的有<ul>
-<li><code>A/B</code>相当于A × B的逆矩阵；</li>
-<li><code>A.*B</code>矩阵的各个元素相乘；</li>
-<li><code>A./B</code>矩阵的各个元素相除；</li>
-<li><code>A+实数</code>A的各个元素都相加这个实数，<code>A/实数</code>相当于<code>A./实数</code>，每个元素都除以这个实数；</li>
-<li><code>A^2</code>表示矩阵相乘，<code>A.^2</code>表示A的各个元素都平方；</li>
-<li><code>A&#39;</code>表示A的转置。</li>
-</ul>
-</li>
-</ol>
-<h2 id="结构化程式与自定义函数"><a href="#结构化程式与自定义函数" class="headerlink" title="结构化程式与自定义函数"></a>结构化程式与自定义函数</h2><h3 id="MATLAB程式（-m文件）"><a href="#MATLAB程式（-m文件）" class="headerlink" title="MATLAB程式（.m文件）"></a>MATLAB程式（.m文件）</h3><ol>
-<li>注释代码：<code>%</code>,代码分部分：<code>%%</code></li>
-<li>以下为MATLAB基本编程语句：所有指令都以<code>end</code>为结束<ul>
-<li>选择函数 <code>if, elseif, else</code>;<code>switch, case</code>;</li>
-<li>循环函数<code> for</code>;<code>while</code>;</li>
-<li><code>break</code>跳出循环。</li>
-</ul>
-</li>
-<li>以下为MATLAB逻辑运算符:运算结果为<code>true</code>or<code>flase</code><ul>
-<li>小于<code>&lt;</code>;小于等于<code>&lt;=</code>;大于<code>&gt;</code>;大于等于<code>&gt;=</code>;</li>
-<li>恒等于<code>==</code>;<strong>不等于<code>~=</code>;</strong></li>
-<li>与<code>&amp;&amp;</code>;或<code>||</code>。</li>
-</ul>
-</li>
-<li>以下为编程的一些技巧：<ul>
-<li><code>clear all</code>清除所有变量；</li>
-<li><code>close all</code>关闭所有窗口；</li>
-<li><code>clc</code>清空命令行窗口；</li>
-<li><code>;</code>命令行持续编写代码，但不执行；</li>
-<li>程序执行时，按下<code>ctrl c</code>，程序终止执行。</li>
-</ul>
-</li>
-</ol>
-<h3 id="函数"><a href="#函数" class="headerlink" title="函数"></a>函数</h3><p>函数书写规则</p>
-<figure class="highlight matlab"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">output</span> = <span class="title">FunctionName</span><span class="params">(v1,v2,v3...)</span></span></span><br></pre></td></tr></table></figure>
-
-<p>output为输出变量，FunctionName为函数名，（）内的为函数变量</p>
-
+          <p>根据台大郭彦甫的课程所做的MATLAB系列笔记。</p>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2024/04/01/MATLAB%E7%B3%BB%E5%88%97%E7%AC%94%E8%AE%B0/">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
       
     </div>
 
@@ -517,7 +472,7 @@
       <div class="site-state-item site-state-categories">
             <a href="/categories/">
           
-        <span class="site-state-item-count">3</span>
+        <span class="site-state-item-count">4</span>
         <span class="site-state-item-name">分类</span></a>
       </div>
   </nav>
