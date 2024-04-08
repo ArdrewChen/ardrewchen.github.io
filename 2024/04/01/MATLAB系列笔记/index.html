@@ -29,8 +29,9 @@
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://cedricchen.xyz/images/structfunc-m">
 <meta property="og:image" content="https://cedricchen.xyz/images/cellarry.png">
+<meta property="og:image" content="https://cedricchen.xyz/images/linefunction.png">
 <meta property="article:published_time" content="2024-04-01T15:51:45.023Z">
-<meta property="article:modified_time" content="2024-04-06T11:48:12.942Z">
+<meta property="article:modified_time" content="2024-04-08T14:09:42.349Z">
 <meta property="article:author" content="Cedric Chen">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="https://cedricchen.xyz/images/structfunc-m">
@@ -188,7 +189,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2024-04-06 19:48:12" itemprop="dateModified" datetime="2024-04-06T19:48:12+08:00">2024-04-06</time>
+                <time title="修改时间：2024-04-08 22:09:42" itemprop="dateModified" datetime="2024-04-08T22:09:42+08:00">2024-04-08</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -216,7 +217,7 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <h1 id="MATLAB系列笔记"><a href="#MATLAB系列笔记" class="headerlink" title="MATLAB系列笔记"></a>MATLAB系列笔记</h1><h2 id="基本操作与矩阵操作"><a href="#基本操作与矩阵操作" class="headerlink" title="基本操作与矩阵操作"></a>基本操作与矩阵操作</h2><h3 id="命令行"><a href="#命令行" class="headerlink" title="命令行"></a>命令行</h3><ol>
+        <h1 id="基本操作与矩阵操作"><a href="#基本操作与矩阵操作" class="headerlink" title="基本操作与矩阵操作"></a>基本操作与矩阵操作</h1><h2 id="命令行"><a href="#命令行" class="headerlink" title="命令行"></a>命令行</h2><ol>
 <li>作用：输入操作命令，输出结果。</li>
 <li>运算规则： 常见的四则运算规则（<code>+</code> <code>-</code> <code>*</code> <code>/</code> <code>^</code>）。</li>
 <li><code>help</code>命令： 命令行输入。</li>
@@ -226,7 +227,7 @@
 <ol start="4">
 <li><code>ln</code>代表指令：<code>log</code>。</li>
 </ol>
-<h3 id="变量"><a href="#变量" class="headerlink" title="变量"></a>变量</h3><ol>
+<h2 id="变量"><a href="#变量" class="headerlink" title="变量"></a>变量</h2><ol>
 <li>可以在工作区观察每个变量的数值。</li>
 <li>变量的开头不能是数字。</li>
 <li><code>who</code>查看当前变量，<code>whos</code>查看当前变量具体性质。</li>
@@ -234,7 +235,7 @@
 <li>变量命名具有高优先级。</li>
 <li><a target="_blank" rel="noopener" href="https://www.cnblogs.com/shenxiaolin/p/6807826.html">变量类型。</a>（使用CTRL+点击可跳转）</li>
 </ol>
-<h3 id="数组（向量与矩阵）"><a href="#数组（向量与矩阵）" class="headerlink" title="数组（向量与矩阵）"></a>数组（向量与矩阵）</h3><ol>
+<h2 id="数组（向量与矩阵）"><a href="#数组（向量与矩阵）" class="headerlink" title="数组（向量与矩阵）"></a>数组（向量与矩阵）</h2><ol>
 <li>行向量：<code>[1 2 3 4]</code>，列向量：<code>[1;2;3;4]</code>，矩阵：<code>[1 21 6; 5 17 9; 31 2 7]</code>，这里的<code>;</code>可类似于换行符号。</li>
 <li>数组索引：向量<code>a(1)</code> 矩阵<code>A(1,2)</code>or<code>A(2)</code>每一列按列数下去。</li>
 <li><code>Colon Operator</code>:<code>A=j:k</code>（j到k逐次增加）;<code>A=j:i:k</code>（j到k按i增加）。</li>
@@ -249,7 +250,7 @@
 </ul>
 </li>
 </ol>
-<h2 id="结构化程序与自定义函数"><a href="#结构化程序与自定义函数" class="headerlink" title="结构化程序与自定义函数"></a>结构化程序与自定义函数</h2><h3 id="MATLAB程序（-m文件）"><a href="#MATLAB程序（-m文件）" class="headerlink" title="MATLAB程序（.m文件）"></a>MATLAB程序（.m文件）</h3><ol>
+<h1 id="结构化程序与自定义函数"><a href="#结构化程序与自定义函数" class="headerlink" title="结构化程序与自定义函数"></a>结构化程序与自定义函数</h1><h2 id="MATLAB程序（-m文件）"><a href="#MATLAB程序（-m文件）" class="headerlink" title="MATLAB程序（.m文件）"></a>MATLAB程序（.m文件）</h2><ol>
 <li>注释代码：<code>%</code>,代码分部分：<code>%%</code></li>
 <li>以下为MATLAB基本编程语句：所有指令都以<code>end</code>为结束<ul>
 <li>选择函数 <code>if, elseif, else</code>;<code>switch, case</code>;</li>
@@ -272,23 +273,23 @@
 </ul>
 </li>
 </ol>
-<h3 id="函数"><a href="#函数" class="headerlink" title="函数"></a>函数</h3><p>函数书写规则</p>
+<h2 id="函数"><a href="#函数" class="headerlink" title="函数"></a>函数</h2><p>函数书写规则</p>
 <figure class="highlight matlab"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">output</span> = <span class="title">FunctionName</span><span class="params">(v1,v2,v3...)</span></span></span><br></pre></td></tr></table></figure>
 
 <p>output为输出变量，FunctionName为函数名，（）内的为函数变量</p>
-<h2 id="变量与档案储存"><a href="#变量与档案储存" class="headerlink" title="变量与档案储存"></a>变量与档案储存</h2><h3 id="变量-1"><a href="#变量-1" class="headerlink" title="变量"></a>变量</h3><h4 id="数值"><a href="#数值" class="headerlink" title="数值"></a>数值</h4><ol>
+<h1 id="变量与档案储存"><a href="#变量与档案储存" class="headerlink" title="变量与档案储存"></a>变量与档案储存</h1><h2 id="变量-1"><a href="#变量-1" class="headerlink" title="变量"></a>变量</h2><h3 id="数值"><a href="#数值" class="headerlink" title="数值"></a>数值</h3><ol>
 <li>整型：int8, uint8（8代表数值所占比特数，u代表无符号数） int16, uint16, int32, uint32, int64, uint64</li>
 <li>浮点数（可认为是小数）：single（32位浮点值，也叫单精度变量），double(默认的变量类型，64位浮点值，也叫双精度分量)。</li>
 <li>比如将一个数字转为double类型，则使用<code>y=double(x)</code>,x是转换前，y是转换后。</li>
 </ol>
-<h4 id="逻辑"><a href="#逻辑" class="headerlink" title="逻辑"></a>逻辑</h4><p>分为0（false）和1（true），为<a href="#logic">逻辑运算符</a>（使用CTRL+点击可跳转）的输出结果。</p>
-<h4 id="字符"><a href="#字符" class="headerlink" title="字符"></a>字符</h4><ol>
+<h3 id="逻辑"><a href="#逻辑" class="headerlink" title="逻辑"></a>逻辑</h3><p>分为0（false）和1（true），为<a href="#logic">逻辑运算符</a>（使用CTRL+点击可跳转）的输出结果。</p>
+<h3 id="字符"><a href="#字符" class="headerlink" title="字符"></a>字符</h3><ol>
 <li>定义：<code>s1=&#39;h&#39;</code>表示s1是一个字符，<code>s2=&#39;hex&#39;</code>表示s2是一个字符串，是多个字符。</li>
 <li>字符串合并：<code>s1=&#39;example&#39;</code>和<code>s2=&#39;string&#39;</code>,合并：<code>s3=[s1 s2]</code>，注意：<code>s3=[s1;s2]</code>，<code>s1</code>与<code>s2</code>并排放置，此时,<code>s1</code>与<code>s2</code>的字符串<strong>长度要求一致</strong>。</li>
 <li>字符串索引：<code>s1=&#39;string&#39;</code>，那么s1(3)为r。str(100001(逻辑输出))&#x3D;‘a’则，第一位和第六位变为a。</li>
 <li>字符串比较：使用<a target="_blank" rel="noopener" href="https://ww2.mathworks.cn/help/matlab/ref/strcmp_zh_CN.html?requestedDomain=cn"><code>strcmp</code>函数</a>(CTRL+点击可跳转)</li>
 </ol>
-<h4 id="结构体"><a href="#结构体" class="headerlink" title="结构体"></a>结构体</h4><ol>
+<h3 id="结构体"><a href="#结构体" class="headerlink" title="结构体"></a>结构体</h3><ol>
 <li><p>定义：结构体是一个存储<code>&#123;键: 值&#125;</code>的数据结构，使用<code>.</code>来访问结构体中的字段。类似于结构体里面为一个成员，成员有不同的属性值。</p>
 </li>
 <li><p>组成</p>
@@ -313,7 +314,7 @@
 <li><p>结构体的嵌套：结构体内部可以再包含结构体。课程中此处的结构体应该包含两个<code>filed</code>:data和nest，其中data为数字，nest为结构体。可以使用多个圆点去访问结构体中的结构体变量的值。</p>
 </li>
 </ol>
-<h4 id="元胞数组"><a href="#元胞数组" class="headerlink" title="元胞数组"></a>元胞数组</h4><ol>
+<h3 id="元胞数组"><a href="#元胞数组" class="headerlink" title="元胞数组"></a>元胞数组</h3><ol>
 <li><p>定义：元胞数组是一个可以容纳不同类型元素的数据结构，使用<code>&#123;&#125;</code>像定义矩阵一样定义元胞数组。</p>
 </li>
 <li><p>赋值</p>
@@ -342,7 +343,7 @@
 </ul>
 </li>
 </ol>
-<h4 id="高维数组"><a href="#高维数组" class="headerlink" title="高维数组"></a>高维数组</h4><ol>
+<h3 id="高维数组"><a href="#高维数组" class="headerlink" title="高维数组"></a>高维数组</h3><ol>
 <li><p>定义：将数组扩展到从一维（向量），二维（矩阵），三维（行row，列columm，层layer)</p>
 </li>
 <li><p>赋值</p>
@@ -357,8 +358,8 @@
 <p><code>reshape()</code>:改变数组的行列数</p>
 <figure class="highlight matlab"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">C=<span class="built_in">reshape</span>(A,m,n) <span class="comment">%A为lxk的数组，C为mxn的数组，其中mxn=lxk</span></span><br></pre></td></tr></table></figure></li>
 </ol>
-<h3 id="文件读写"><a href="#文件读写" class="headerlink" title="文件读写"></a>文件读写</h3><p>可以读取的文件类型有：MATLAB数据（.mat），Excel表格（.xls或者.xlsx）文件，空格分隔的数字（.txt）。</p>
-<h4 id="MATLAB数据"><a href="#MATLAB数据" class="headerlink" title="MATLAB数据"></a>MATLAB数据</h4><ol>
+<h2 id="文件读写"><a href="#文件读写" class="headerlink" title="文件读写"></a>文件读写</h2><p>可以读取的文件类型有：MATLAB数据（.mat），Excel表格（.xls或者.xlsx）文件，空格分隔的数字（.txt）。</p>
+<h3 id="MATLAB数据"><a href="#MATLAB数据" class="headerlink" title="MATLAB数据"></a>MATLAB数据</h3><ol>
 <li>存储：save()函数<ul>
 <li><code>save(filename,variables)</code>将变量<code>variables</code>以二进制形式存入文件中。</li>
 <li><code>save(filename,variables,&#39;-ascii&#39;)</code>将变量<code>variables</code>以文本形式存入文件中。</li>
@@ -371,7 +372,7 @@
 </li>
 <li>注意：这里的文件名要在文件和代码在同一目录下才能读取，若不在同一目录下，需要在此处改为文件路径。同时，这里的参数，<code>filename</code>和<code>variables</code>都是字符串格式,若不指定<code>variables</code>参数,则将当前工作区内所有变量存入文件中。</li>
 </ol>
-<h4 id="Excel表格数据"><a href="#Excel表格数据" class="headerlink" title="Excel表格数据"></a>Excel表格数据</h4><ol>
+<h3 id="Excel表格数据"><a href="#Excel表格数据" class="headerlink" title="Excel表格数据"></a>Excel表格数据</h3><ol>
 <li>读取：xlsread()，2019a开始后matlab不建议使用，以新函数代替。现在改用为：<ul>
 <li><a target="_blank" rel="noopener" href="https://ww2.mathworks.cn/help/matlab/ref/readmatrix.html">readmatrix()</a> 从文件中读取矩阵，格式：<code>M=readmatrix(&#39;filename.xlsx&#39;,&#39;Sheet&#39;,&#39;sheetname&#39;,&#39;Range&#39;,&#39;rangenumber&#39;)</code>,中<code>Sheet</code>,<code>Range</code>这两个是固定格式。或者直接<code>M = readmatrixd(&#39;filename.xlsx&#39;)</code> 读取文件中所有数据。</li>
 <li><a target="_blank" rel="noopener" href="https://ww2.mathworks.cn/help/matlab/ref/readcell.html">readcell()</a> 从文件中读取元胞数组</li>
@@ -385,18 +386,88 @@
 </ul>
 </li>
 </ol>
-<h4 id="文本数据"><a href="#文本数据" class="headerlink" title="文本数据"></a>文本数据</h4><p>使用和写入excel相同的函数写入文本，就是指定的参数不一样，例如：writematrix写入文本。</p>
+<h3 id="文本数据"><a href="#文本数据" class="headerlink" title="文本数据"></a>文本数据</h3><p>使用和写入excel相同的函数写入文本，就是指定的参数不一样，例如：writematrix写入文本。</p>
 <ol>
 <li>直接 <code>writematrix(M)</code> 则默认以逗号分隔各元素写入 M.txt 文件中；</li>
 <li>指定分隔符则使用<code>writematrix(M, &#39;filename.txt&#39;, &#39;Delimiter&#39;, &#39; &#39;)；</code> ‘Delimiter’是固定格式；</li>
 <li>matlab 支持使用 &#96;&#96;； <code>\t</code> ； <code>,</code> ； <code>;</code> ； <code>|</code>（对应的字符名称为<br>space、tab、comma、semi、bar）作为分隔符。</li>
 </ol>
-<h4 id="低阶文件处理IO函数"><a href="#低阶文件处理IO函数" class="headerlink" title="低阶文件处理IO函数"></a>低阶文件处理IO函数</h4><p>使用<code>fopen()</code>函数打开文件或获得有关打开文件的信息。</p>
+<h3 id="低阶文件处理IO函数"><a href="#低阶文件处理IO函数" class="headerlink" title="低阶文件处理IO函数"></a>低阶文件处理IO函数</h3><p>使用<code>fopen()</code>函数打开文件或获得有关打开文件的信息。</p>
 <ol>
 <li>无论是写入还是读取都要先获得fileID<br><code>fileID = fopen(filename,permission)</code> 将打开由 permission 指定访问类型的文件。permission 为文件访问类型：<code>&#39;r&#39;</code> （默认）读取 ，<code>&#39;w&#39;</code> 写入。</li>
 <li>操作完毕后务必使用 <code>fclose(fileID)</code> 函数关闭文件，否则 matlab 将一直占用文件。</li>
 <li>使用<code>feof(fid)</code> 检查是否到达文件结尾，到达结尾返回 true。</li>
 </ol>
+<h1 id="初阶绘图"><a href="#初阶绘图" class="headerlink" title="初阶绘图"></a>初阶绘图</h1><h2 id="基础绘图"><a href="#基础绘图" class="headerlink" title="基础绘图"></a>基础绘图</h2><h3 id="plot-基本使用"><a href="#plot-基本使用" class="headerlink" title="plot()基本使用"></a>plot()基本使用</h3><ol>
+<li><p><code>plot(x,y)</code>,x和y都是向量，要求长度一致。</p>
+</li>
+<li><p><code>plot(y)</code>,此时x默认<code>1,2,3,4...</code></p>
+</li>
+<li><p>设置曲线性质：<code>plot(x,y,&#39;linespec&#39;)</code>,<code>linespec</code>可以设置线型、标记符号和颜色。</p>
+</li>
+</ol>
+<p>   设置多条曲线性质：<code>plot(x1,y1,&#39;line1&#39;,x2,y2,&#39;line2&#39;,...)</code></p>
+<p>   <img src="/images/linefunction.png" alt="image-20240408212221452"></p>
+<ol start="4">
+<li>需要保持多条图在一张图中（在一张图中显示多条曲线）：<code>hold on</code>开始保持，<code>hold off</code>取消保持。</li>
+</ol>
+<h3 id="添加图例（在图右上角显示每条曲线代表意义）"><a href="#添加图例（在图右上角显示每条曲线代表意义）" class="headerlink" title="添加图例（在图右上角显示每条曲线代表意义）"></a>添加图例（在图右上角显示每条曲线代表意义）</h3><figure class="highlight matlab"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">plot</span>(<span class="string">&#x27;line1&#x27;</span>,<span class="string">&#x27;line2&#x27;</span>,<span class="string">&#x27;line3&#x27;</span>,<span class="string">&#x27;line4&#x27;</span>);</span><br><span class="line"><span class="built_in">legend</span>(<span class="string">&#x27;line1&#x27;</span>,<span class="string">&#x27;line2&#x27;</span>,<span class="string">&#x27;line3&#x27;</span>,<span class="string">&#x27;line4&#x27;</span>); <span class="comment">% 这里的顺序和plot()中的对应顺序要一致</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="添加标题和坐标轴"><a href="#添加标题和坐标轴" class="headerlink" title="添加标题和坐标轴"></a>添加标题和坐标轴</h3><ol>
+<li>添加标题：<code>title(&#39;str&#39;)</code>;</li>
+<li>添加坐标轴题注：xlabel()、ylabel()、zlabel()为 x y z 轴添加题注。</li>
+</ol>
+<h3 id="添加文本、线条和箭头"><a href="#添加文本、线条和箭头" class="headerlink" title="添加文本、线条和箭头"></a>添加文本、线条和箭头</h3><ol>
+<li>文本：<code>text(x,y,str)</code>;</li>
+<li>线条：<code>line(x,y)</code>;</li>
+<li>箭头：<code>annotation(lineType, x, y)</code> 创建一个在当前图窗中的两个点之间延伸的线条或箭头注释，将 lineType 指定为 line(线条)、arrow(箭头) 或 doublearrow(双向箭头)，将 x 和 y 分别指定为 [x_begin, x_end] 和 [y_begin, y_end] 形式的二元素向量。</li>
+</ol>
+<h3 id="改变坐标轴的显示值"><a href="#改变坐标轴的显示值" class="headerlink" title="改变坐标轴的显示值"></a>改变坐标轴的显示值</h3><figure class="highlight matlab"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">xticks([<span class="number">1</span> <span class="number">2</span> <span class="number">3</span> <span class="number">4</span>])</span><br><span class="line">xticklabels(&#123;<span class="string">&#x27;ET&#x27;</span>,<span class="string">&#x27;et&#x27;</span>,<span class="string">&#x27;lt&#x27;</span>,<span class="string">&#x27;LT&#x27;</span>&#125;) <span class="comment">%改变对应位置的值</span></span><br><span class="line">yticks([<span class="number">0</span> <span class="number">1</span>])</span><br><span class="line">yticklabels(&#123;<span class="string">&#x27;0&#x27;</span>,<span class="string">&#x27;1&#x27;</span>&#125;)</span><br></pre></td></tr></table></figure>
+
+<h2 id="更改图形属性"><a href="#更改图形属性" class="headerlink" title="更改图形属性"></a>更改图形属性</h2><h3 id="图形属性"><a href="#图形属性" class="headerlink" title="图形属性"></a>图形属性</h3><p>画出的一个图主要包括 Figure Axes Line 三个 Object</p>
+<h3 id="获取图形句柄"><a href="#获取图形句柄" class="headerlink" title="获取图形句柄"></a>获取图形句柄</h3><p>图形句柄本质上就是一个浮点数,可以唯一确定一个图形对象.下面几个函数用于获取图形句柄.</p>
+<table>
+<thead>
+<tr>
+<th>函数</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>gca()</td>
+<td>获取当前坐标轴的句柄</td>
+</tr>
+<tr>
+<td>gcf()</td>
+<td>获取当前图像的句柄</td>
+</tr>
+<tr>
+<td>allchild(handle_list)</td>
+<td>获取该对象的所有子对象的句柄</td>
+</tr>
+<tr>
+<td>ancestor(h,type)</td>
+<td>获取对象最近的type类型的祖先节点</td>
+</tr>
+<tr>
+<td>delete(h)</td>
+<td>删除某对象</td>
+</tr>
+<tr>
+<td>findall(handle_list)</td>
+<td>获取该对象的后代对象</td>
+</tr>
+</tbody></table>
+<h3 id="通过图形句柄改变图形属性"><a href="#通过图形句柄改变图形属性" class="headerlink" title="通过图形句柄改变图形属性"></a>通过图形句柄改变图形属性</h3><ol>
+<li><p>改变坐标轴属性</p>
+<figure class="highlight matlab"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">% 改变坐标轴字体大小</span></span><br><span class="line">set(gca, <span class="string">&#x27;FontSize&#x27;</span>, <span class="number">25</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">% 改变X轴坐标轴显示</span></span><br><span class="line">set(gca, <span class="string">&#x27;XTick&#x27;</span>, <span class="number">0</span>:<span class="built_in">pi</span>/<span class="number">2</span>:<span class="number">2</span>*<span class="built_in">pi</span>);</span><br><span class="line">set(gca, <span class="string">&#x27;XTickLabel&#x27;</span>, <span class="number">0</span>:<span class="number">90</span>:<span class="number">360</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">% 把X轴显示改为自己想要显示的值</span></span><br><span class="line">set(gca, <span class="string">&#x27;FontName&#x27;</span>, <span class="string">&#x27;symbol&#x27;</span>);</span><br><span class="line">set(gca, <span class="string">&#x27;XTickLabel&#x27;</span>, &#123;<span class="string">&#x27;0&#x27;</span>, <span class="string">&#x27;p/2&#x27;</span>, <span class="string">&#x27;p&#x27;</span>, <span class="string">&#x27;3p/2&#x27;</span>, <span class="string">&#x27;2p&#x27;</span>&#125;);</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>改变线型</p>
+<figure class="highlight matlab"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">h = <span class="built_in">plot</span>(x,y); </span><br><span class="line">set(h, <span class="string">&#x27;LineStyle&#x27;</span>,<span class="string">&#x27;-.&#x27;</span>, ...</span><br><span class="line">	<span class="string">&#x27;LineWidth&#x27;</span>, <span class="number">7.0</span>, ...</span><br><span class="line">	<span class="string">&#x27;Color&#x27;</span>, <span class="string">&#x27;g&#x27;</span>);</span><br></pre></td></tr></table></figure></li>
+</ol>
+<h3 id="保存图片"><a href="#保存图片" class="headerlink" title="保存图片"></a>保存图片</h3><p>使用<code>saveas(fig,filename)</code>命令可以将图形对象保存到文件中,其中<code>fig</code>为图形句柄,<code>filname</code>为文件名。</p>
+<figure class="highlight matlab"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">saveas(gcf, <span class="string">&#x27;myfigure.png&#x27;</span>)</span><br></pre></td></tr></table></figure>
+
 
     </div>
 
@@ -474,7 +545,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#MATLAB%E7%B3%BB%E5%88%97%E7%AC%94%E8%AE%B0"><span class="nav-number">1.</span> <span class="nav-text">MATLAB系列笔记</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9F%BA%E6%9C%AC%E6%93%8D%E4%BD%9C%E4%B8%8E%E7%9F%A9%E9%98%B5%E6%93%8D%E4%BD%9C"><span class="nav-number">1.1.</span> <span class="nav-text">基本操作与矩阵操作</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%91%BD%E4%BB%A4%E8%A1%8C"><span class="nav-number">1.1.1.</span> <span class="nav-text">命令行</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8F%98%E9%87%8F"><span class="nav-number">1.1.2.</span> <span class="nav-text">变量</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%95%B0%E7%BB%84%EF%BC%88%E5%90%91%E9%87%8F%E4%B8%8E%E7%9F%A9%E9%98%B5%EF%BC%89"><span class="nav-number">1.1.3.</span> <span class="nav-text">数组（向量与矩阵）</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%BB%93%E6%9E%84%E5%8C%96%E7%A8%8B%E5%BA%8F%E4%B8%8E%E8%87%AA%E5%AE%9A%E4%B9%89%E5%87%BD%E6%95%B0"><span class="nav-number">1.2.</span> <span class="nav-text">结构化程序与自定义函数</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#MATLAB%E7%A8%8B%E5%BA%8F%EF%BC%88-m%E6%96%87%E4%BB%B6%EF%BC%89"><span class="nav-number">1.2.1.</span> <span class="nav-text">MATLAB程序（.m文件）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%87%BD%E6%95%B0"><span class="nav-number">1.2.2.</span> <span class="nav-text">函数</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8F%98%E9%87%8F%E4%B8%8E%E6%A1%A3%E6%A1%88%E5%82%A8%E5%AD%98"><span class="nav-number">1.3.</span> <span class="nav-text">变量与档案储存</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8F%98%E9%87%8F-1"><span class="nav-number">1.3.1.</span> <span class="nav-text">变量</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%95%B0%E5%80%BC"><span class="nav-number">1.3.1.1.</span> <span class="nav-text">数值</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E9%80%BB%E8%BE%91"><span class="nav-number">1.3.1.2.</span> <span class="nav-text">逻辑</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%AD%97%E7%AC%A6"><span class="nav-number">1.3.1.3.</span> <span class="nav-text">字符</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%BB%93%E6%9E%84%E4%BD%93"><span class="nav-number">1.3.1.4.</span> <span class="nav-text">结构体</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%85%83%E8%83%9E%E6%95%B0%E7%BB%84"><span class="nav-number">1.3.1.5.</span> <span class="nav-text">元胞数组</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E9%AB%98%E7%BB%B4%E6%95%B0%E7%BB%84"><span class="nav-number">1.3.1.6.</span> <span class="nav-text">高维数组</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%96%87%E4%BB%B6%E8%AF%BB%E5%86%99"><span class="nav-number">1.3.2.</span> <span class="nav-text">文件读写</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#MATLAB%E6%95%B0%E6%8D%AE"><span class="nav-number">1.3.2.1.</span> <span class="nav-text">MATLAB数据</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Excel%E8%A1%A8%E6%A0%BC%E6%95%B0%E6%8D%AE"><span class="nav-number">1.3.2.2.</span> <span class="nav-text">Excel表格数据</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%96%87%E6%9C%AC%E6%95%B0%E6%8D%AE"><span class="nav-number">1.3.2.3.</span> <span class="nav-text">文本数据</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%BD%8E%E9%98%B6%E6%96%87%E4%BB%B6%E5%A4%84%E7%90%86IO%E5%87%BD%E6%95%B0"><span class="nav-number">1.3.2.4.</span> <span class="nav-text">低阶文件处理IO函数</span></a></li></ol></li></ol></li></ol></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%9F%BA%E6%9C%AC%E6%93%8D%E4%BD%9C%E4%B8%8E%E7%9F%A9%E9%98%B5%E6%93%8D%E4%BD%9C"><span class="nav-number">1.</span> <span class="nav-text">基本操作与矩阵操作</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%91%BD%E4%BB%A4%E8%A1%8C"><span class="nav-number">1.1.</span> <span class="nav-text">命令行</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8F%98%E9%87%8F"><span class="nav-number">1.2.</span> <span class="nav-text">变量</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%95%B0%E7%BB%84%EF%BC%88%E5%90%91%E9%87%8F%E4%B8%8E%E7%9F%A9%E9%98%B5%EF%BC%89"><span class="nav-number">1.3.</span> <span class="nav-text">数组（向量与矩阵）</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%BB%93%E6%9E%84%E5%8C%96%E7%A8%8B%E5%BA%8F%E4%B8%8E%E8%87%AA%E5%AE%9A%E4%B9%89%E5%87%BD%E6%95%B0"><span class="nav-number">2.</span> <span class="nav-text">结构化程序与自定义函数</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#MATLAB%E7%A8%8B%E5%BA%8F%EF%BC%88-m%E6%96%87%E4%BB%B6%EF%BC%89"><span class="nav-number">2.1.</span> <span class="nav-text">MATLAB程序（.m文件）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%87%BD%E6%95%B0"><span class="nav-number">2.2.</span> <span class="nav-text">函数</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%8F%98%E9%87%8F%E4%B8%8E%E6%A1%A3%E6%A1%88%E5%82%A8%E5%AD%98"><span class="nav-number">3.</span> <span class="nav-text">变量与档案储存</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8F%98%E9%87%8F-1"><span class="nav-number">3.1.</span> <span class="nav-text">变量</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%95%B0%E5%80%BC"><span class="nav-number">3.1.1.</span> <span class="nav-text">数值</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%80%BB%E8%BE%91"><span class="nav-number">3.1.2.</span> <span class="nav-text">逻辑</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AD%97%E7%AC%A6"><span class="nav-number">3.1.3.</span> <span class="nav-text">字符</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%BB%93%E6%9E%84%E4%BD%93"><span class="nav-number">3.1.4.</span> <span class="nav-text">结构体</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%85%83%E8%83%9E%E6%95%B0%E7%BB%84"><span class="nav-number">3.1.5.</span> <span class="nav-text">元胞数组</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%AB%98%E7%BB%B4%E6%95%B0%E7%BB%84"><span class="nav-number">3.1.6.</span> <span class="nav-text">高维数组</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%96%87%E4%BB%B6%E8%AF%BB%E5%86%99"><span class="nav-number">3.2.</span> <span class="nav-text">文件读写</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#MATLAB%E6%95%B0%E6%8D%AE"><span class="nav-number">3.2.1.</span> <span class="nav-text">MATLAB数据</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Excel%E8%A1%A8%E6%A0%BC%E6%95%B0%E6%8D%AE"><span class="nav-number">3.2.2.</span> <span class="nav-text">Excel表格数据</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%96%87%E6%9C%AC%E6%95%B0%E6%8D%AE"><span class="nav-number">3.2.3.</span> <span class="nav-text">文本数据</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BD%8E%E9%98%B6%E6%96%87%E4%BB%B6%E5%A4%84%E7%90%86IO%E5%87%BD%E6%95%B0"><span class="nav-number">3.2.4.</span> <span class="nav-text">低阶文件处理IO函数</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%88%9D%E9%98%B6%E7%BB%98%E5%9B%BE"><span class="nav-number">4.</span> <span class="nav-text">初阶绘图</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9F%BA%E7%A1%80%E7%BB%98%E5%9B%BE"><span class="nav-number">4.1.</span> <span class="nav-text">基础绘图</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#plot-%E5%9F%BA%E6%9C%AC%E4%BD%BF%E7%94%A8"><span class="nav-number">4.1.1.</span> <span class="nav-text">plot()基本使用</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%B7%BB%E5%8A%A0%E5%9B%BE%E4%BE%8B%EF%BC%88%E5%9C%A8%E5%9B%BE%E5%8F%B3%E4%B8%8A%E8%A7%92%E6%98%BE%E7%A4%BA%E6%AF%8F%E6%9D%A1%E6%9B%B2%E7%BA%BF%E4%BB%A3%E8%A1%A8%E6%84%8F%E4%B9%89%EF%BC%89"><span class="nav-number">4.1.2.</span> <span class="nav-text">添加图例（在图右上角显示每条曲线代表意义）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%B7%BB%E5%8A%A0%E6%A0%87%E9%A2%98%E5%92%8C%E5%9D%90%E6%A0%87%E8%BD%B4"><span class="nav-number">4.1.3.</span> <span class="nav-text">添加标题和坐标轴</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%B7%BB%E5%8A%A0%E6%96%87%E6%9C%AC%E3%80%81%E7%BA%BF%E6%9D%A1%E5%92%8C%E7%AE%AD%E5%A4%B4"><span class="nav-number">4.1.4.</span> <span class="nav-text">添加文本、线条和箭头</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%94%B9%E5%8F%98%E5%9D%90%E6%A0%87%E8%BD%B4%E7%9A%84%E6%98%BE%E7%A4%BA%E5%80%BC"><span class="nav-number">4.1.5.</span> <span class="nav-text">改变坐标轴的显示值</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%9B%B4%E6%94%B9%E5%9B%BE%E5%BD%A2%E5%B1%9E%E6%80%A7"><span class="nav-number">4.2.</span> <span class="nav-text">更改图形属性</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%9B%BE%E5%BD%A2%E5%B1%9E%E6%80%A7"><span class="nav-number">4.2.1.</span> <span class="nav-text">图形属性</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%8E%B7%E5%8F%96%E5%9B%BE%E5%BD%A2%E5%8F%A5%E6%9F%84"><span class="nav-number">4.2.2.</span> <span class="nav-text">获取图形句柄</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%80%9A%E8%BF%87%E5%9B%BE%E5%BD%A2%E5%8F%A5%E6%9F%84%E6%94%B9%E5%8F%98%E5%9B%BE%E5%BD%A2%E5%B1%9E%E6%80%A7"><span class="nav-number">4.2.3.</span> <span class="nav-text">通过图形句柄改变图形属性</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BF%9D%E5%AD%98%E5%9B%BE%E7%89%87"><span class="nav-number">4.2.4.</span> <span class="nav-text">保存图片</span></a></li></ol></li></ol></li></ol></div>
       </div>
       <!--/noindex-->
 
