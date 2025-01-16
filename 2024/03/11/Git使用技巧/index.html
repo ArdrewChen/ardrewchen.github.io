@@ -28,7 +28,7 @@
 <meta property="og:description" content="关于Git常用命令的集合，方便查询。">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2024-03-11T13:21:10.000Z">
-<meta property="article:modified_time" content="2024-10-26T12:28:27.517Z">
+<meta property="article:modified_time" content="2025-01-16T07:14:26.302Z">
 <meta property="article:author" content="Cedric Chen">
 <meta name="twitter:card" content="summary">
 
@@ -189,7 +189,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2024-10-26 20:28:27" itemprop="dateModified" datetime="2024-10-26T20:28:27+08:00">2024-10-26</time>
+                <time title="修改时间：2025-01-16 15:14:26" itemprop="dateModified" datetime="2025-01-16T15:14:26+08:00">2025-01-16</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -217,138 +217,192 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <h2 id="基本使用"><a href="#基本使用" class="headerlink" title="基本使用"></a>基本使用</h2><ul>
-<li><p>初始化仓库：只需一次，再次打开时不需要再次初始化</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git init</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>添加文件：可一次添加多个文件，此时文件进入暂存区</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git add 文件名</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>提交文件：将暂存区的修改加入到分支中</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git commit -m &quot;备注信息&quot;</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>查看文件状态：是否修改和是否提交</p>
+        <h1 id="Git原理"><a href="#Git原理" class="headerlink" title="Git原理"></a>Git原理</h1><p>Git 是一个分布式版本控制系统，它用于跟踪文件的更改历史并支持多人协作开发。Git 的基本原理是通过记录文件的 <strong>快照</strong> 和 <strong>变更</strong> 来管理文件版本，使得团队能够高效地进行并行开发和历史追踪。下面是 Git 工作原理的核心概念和机制。</p>
+<h2 id="Git-数据模型"><a href="#Git-数据模型" class="headerlink" title="Git 数据模型"></a><strong>Git 数据模型</strong></h2><p>Git 的数据模型基于对象存储，文件和历史记录都以对象的形式存储。Git 主要管理四种类型的对象：</p>
+<h3 id="Blob（文件对象）"><a href="#Blob（文件对象）" class="headerlink" title="Blob（文件对象）"></a><strong>Blob（文件对象）</strong></h3><ul>
+<li><strong>Blob</strong> 是 Git 用来存储文件内容的基本单元。每个文件在 Git 中都有一个对应的 blob 对象，保存文件的内容。</li>
+<li>Git 不存储文件的名称和目录结构，而是通过树对象（tree object）来组织这些内容。</li>
+<li>当文件的内容发生变化时，Git 会为其生成新的 Blob 对象，并基于该内容生成一个唯一的哈希值。</li>
+</ul>
+<h3 id="Tree（树对象）"><a href="#Tree（树对象）" class="headerlink" title="Tree（树对象）"></a><strong>Tree（树对象）</strong></h3><ul>
+<li><strong>Tree</strong> 对象用来表示目录结构，它包含对文件（Blob 对象）的引用，以及指向其他子目录的指针（即对其他 Tree 对象的引用）。</li>
+<li>每个 Tree 对象都有一个目录结构，并包含每个文件及子目录的路径和相应的哈希值。</li>
+</ul>
+<h3 id="Commit（提交对象）"><a href="#Commit（提交对象）" class="headerlink" title="Commit（提交对象）"></a><strong>Commit（提交对象）</strong></h3><ul>
+<li><p>Commit</p>
+<p>对象记录一个版本的快照，它包含：</p>
+<ul>
+<li>指向树对象的指针，树对象描述了该提交时所有文件的状态（包括文件和目录）。</li>
+<li>提交的元数据，如作者、日期、提交信息等。</li>
+<li>对于每次提交，Git 会将该提交与前一个提交的哈希值（父提交）进行连接，从而形成提交历史链条。</li>
+</ul>
 </li>
 </ul>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git status</span><br></pre></td></tr></table></figure>
+<h3 id="tag（标签对象）"><a href="#tag（标签对象）" class="headerlink" title="tag（标签对象）"></a>tag（标签对象）</h3><ul>
+<li><strong>Tag</strong> 是 Git 中的一个引用，通常用于标记一个特定的提交，如版本号。标签对象并不存储文件数据，而是指向一个提交对象。</li>
+</ul>
+<h2 id="Git-工作流程"><a href="#Git-工作流程" class="headerlink" title="Git 工作流程"></a>Git 工作流程</h2><p>Git 的工作流程可以分为以下几个区域和步骤：</p>
+<h3 id="工作目录（Working-Directory）"><a href="#工作目录（Working-Directory）" class="headerlink" title="工作目录（Working Directory）"></a><strong>工作目录（Working Directory）</strong></h3><ul>
+<li><strong>工作目录</strong> 是你本地的项目文件夹。它包含你正在编辑的文件，以及当前项目的最新版本（但并不是 Git 管理的所有版本，只有当前的工作副本）。</li>
+<li>在工作目录中，文件是可见的、可修改的，用户可以进行编辑操作。</li>
+</ul>
+<h3 id="暂存区（Staging-Area）"><a href="#暂存区（Staging-Area）" class="headerlink" title="暂存区（Staging Area）"></a><strong>暂存区（Staging Area）</strong></h3><ul>
+<li><strong>暂存区</strong> 也称为 <strong>索引（Index）</strong>，是 Git 用来临时保存文件改动的地方。当你执行 <code>git add</code> 时，Git 会把工作目录中的文件变动添加到暂存区，准备进行提交。</li>
+<li>暂存区中的文件是快照级别的内容，Git 会记录这些文件的状态，以便在执行 <code>git commit</code> 时将它们提交到版本库中。</li>
+</ul>
+<h3 id="本地仓库（Repository）"><a href="#本地仓库（Repository）" class="headerlink" title="本地仓库（Repository）"></a>本地仓库（Repository）</h3><ul>
+<li><strong>本地仓库</strong> 存储了你的 Git 项目的历史记录和所有对象（如提交、树、文件内容等）。</li>
+<li>本地仓库的实际数据存储在 <code>.git</code> 目录中，所有的提交记录、对象、配置文件等都在这个目录下。</li>
+</ul>
+<h3 id="远程仓库（Remote-Repository）"><a href="#远程仓库（Remote-Repository）" class="headerlink" title="远程仓库（Remote Repository）"></a>远程仓库（Remote Repository）</h3><ul>
+<li><strong>远程仓库</strong> 是托管在服务器上的 Git 仓库，供团队成员共享和协作开发。</li>
+<li>Git 通过网络连接到远程仓库，你可以将本地的更改推送到远程仓库，也可以从远程仓库拉取更新。</li>
+<li>常见的远程仓库有 GitHub、GitLab、Bitbucket 等。</li>
+</ul>
+<h1 id="Git命令"><a href="#Git命令" class="headerlink" title="Git命令"></a>Git命令</h1><h2 id="Git配置"><a href="#Git配置" class="headerlink" title="Git配置"></a>Git配置</h2><h3 id="初始化仓库"><a href="#初始化仓库" class="headerlink" title="初始化仓库"></a>初始化仓库</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git init</span><br></pre></td></tr></table></figure>
+
+<p>其余参数</p>
+<ul>
+<li><code>--initial-branch</code> 初始化的分支</li>
+<li><code>--bare</code> 创建一个裸仓库（纯Git目录，没有工作目录）</li>
+<li><code>--template</code> 通过模板来创建预先构建好的自定义git目录</li>
+</ul>
+<h3 id="查看git文件目录"><a href="#查看git文件目录" class="headerlink" title="查看git文件目录"></a>查看git文件目录</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">tree .git</span><br></pre></td></tr></table></figure>
+
+<p>输出：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">.git</span><br><span class="line">├─hooks</span><br><span class="line">├─info</span><br><span class="line">├─objects</span><br><span class="line">│  ├─d5</span><br><span class="line">│  ├─info</span><br><span class="line">│  └─pack</span><br><span class="line">└─refs</span><br><span class="line">    ├─heads</span><br><span class="line">    └─tags</span><br><span class="line"></span><br></pre></td></tr></table></figure>
 
 <ul>
-<li><p>查看具体修改内容</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git diff 文件名</span><br></pre></td></tr></table></figure>
-
-<p>查看工作区和版本库最新版本的区别</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git diff HEAD -- 文件名（注意空格）</span><br></pre></td></tr></table></figure>
+<li><p><code>config</code>：Git 配置文件。</p>
 </li>
-<li><p>查看提交日志，<code>git log</code>之后可按q键退出</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git log</span><br></pre></td></tr></table></figure>
-
-<p>精简版：精简提交日志</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git log --pretty=oneline</span><br></pre></td></tr></table></figure>
+<li><p><code>description</code>：一个可选的仓库描述文件。</p>
 </li>
-<li><p>版本回退</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git reset --hard HEAD^(几个^表示回退前几个版本，过多可以使用HEAD~n,n表示前几个版本)</span><br></pre></td></tr></table></figure>
-
-<p>或者：该方法可以实现回退也可以前进到回退前的状态</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git reset --hard commit_id </span><br></pre></td></tr></table></figure>
-
-<p>寻找<code>commit_id</code>：</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git reflog</span><br></pre></td></tr></table></figure>
-
-<p>查看文件内容</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cat 文件名</span><br></pre></td></tr></table></figure>
+<li><p><code>HEAD</code>：指向当前分支的引用。</p>
 </li>
-<li><p>撤销修改</p>
+<li><p><code>objects</code>：存储 Git 对象（如提交、树、文件等）。</p>
+</li>
+<li><p><code>refs</code>：存储引用（例如分支和标签）。</p>
+</li>
+</ul>
+<h3 id="配置git"><a href="#配置git" class="headerlink" title="配置git"></a>配置git</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git config [&lt;options&gt;] &lt;name&gt; &lt;value&gt;</span><br></pre></td></tr></table></figure>
+
+<p><strong>系统级配置</strong>：对所有用户和仓库有效，配置存储在系统级别的配置文件中，通常是 <code>/etc/gitconfig</code> 文件。(<code>--system</code>)</p>
+<p><strong>全局配置</strong>：对当前用户的所有仓库有效，配置存储在用户目录下的 <code>.gitconfig</code> 文件中，通常是 <code>~/.gitconfig</code>（Linux&#x2F;macOS）或 <code>C:\Users\&lt;UserName&gt;\.gitconfig</code>（Windows）。（<code>--global</code>）</p>
+<p><strong>仓库级配置</strong>：只对当前仓库有效，配置存储在当前仓库的 <code>.git/config</code> 文件中。(<code>--local</code>)</p>
+<h3 id="配置远程仓库"><a href="#配置远程仓库" class="headerlink" title="配置远程仓库"></a>配置远程仓库</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git remote</span><br></pre></td></tr></table></figure>
+
+<p>用于管理远程仓库</p>
+<h4 id="查看远程仓库"><a href="#查看远程仓库" class="headerlink" title="查看远程仓库"></a>查看远程仓库</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git remote -v</span><br></pre></td></tr></table></figure>
+
+<h4 id="添加远程仓库"><a href="#添加远程仓库" class="headerlink" title="添加远程仓库"></a>添加远程仓库</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git remote add 仓库别名 远程仓库的地址（可Http或ssh）</span><br></pre></td></tr></table></figure>
+
+<p>同一个<code>origin</code>设置不同的<code>push</code>和<code>fetch</code></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git remote set-url --add --push(or fetch) origin 远程仓库地址</span><br></pre></td></tr></table></figure>
+
+<h2 id="提交代码"><a href="#提交代码" class="headerlink" title="提交代码"></a>提交代码</h2><h3 id="添加文件至暂存区"><a href="#添加文件至暂存区" class="headerlink" title="添加文件至暂存区"></a>添加文件至暂存区</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git add file_names</span><br></pre></td></tr></table></figure>
+
+<p>此时<code>objects</code>下会多出一个目录，但没有生成提交。</p>
+<p>当执行 <code>git add</code> 操作时，Git 会对文件的内容计算哈希值，并生成新的 <strong>blob 对象</strong>。这些对象会被存储在 <code>.git/objects/</code> 目录中，并且根据哈希值的前两位字母和后面的内容划分到子目录中。</p>
+<h3 id="提交文件"><a href="#提交文件" class="headerlink" title="提交文件"></a>提交文件</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git commit -m &quot;提交信息&quot;</span><br></pre></td></tr></table></figure>
+
+<p><strong>创建一个新的提交对象</strong>（<code>commit object</code>）：</p>
 <ul>
-<li>将文件回到最近一次git add或者git commit 的状态，这个时候的撤销指的是修改没有被添加到暂存区，即修改在工作区。</li>
+<li>Git 会根据 <strong>暂存区</strong> 的内容（包括文件和文件的元数据，如修改时间、文件路径等），生成一个新的 <strong>提交对象</strong>。</li>
+<li>提交对象包含：<ul>
+<li>提交的作者信息（如姓名、邮箱）。</li>
+<li>提交的时间戳。</li>
+<li>父提交的哈希（前一个提交的哈希值，如果是第一次提交则没有父提交）。</li>
+<li>一个指向 <strong>树对象</strong>（<code>tree object</code>）的哈希值，树对象描述了该提交所涉及的文件和目录结构。</li>
+<li>提交信息（即 <code>git commit</code> 时输入的 commit message）。</li>
 </ul>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git checkout -- 文件名</span><br></pre></td></tr></table></figure>
-
+</li>
+</ul>
+<p>这个 <strong>提交对象</strong> 会根据 Git 的哈希算法（SHA-1）生成一个唯一的 ID，通常是一个 40 字符的十六进制字符串。</p>
 <ul>
-<li>文件已经添加到暂存区，此时需要撤销修改，首先将文件撤回暂存区，回到工作区</li>
+<li>Git 对象存储<ul>
+<li>该提交对象会被存储在 <code>.git/objects/</code> 目录下，路径为 <code>/.git/objects/&#123;commit-hash&#125;</code>。</li>
+<li><code>.git/objects/&#123;commit-hash&#125;</code> 文件存储着完整的提交对象数据。</li>
 </ul>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git reset HEAD 文件名</span><br></pre></td></tr></table></figure>
-
-<p>使用工作区的修改撤回，即</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git checkout -- 文件名</span><br></pre></td></tr></table></figure>
-
+</li>
+</ul>
+<p><strong>创建或更新树对象</strong>（<code>tree object</code>）：</p>
 <ul>
-<li>推到远程库了不支持修改撤回</li>
+<li>提交对象还会包含一个指向 <strong>树对象</strong>（<code>tree object</code>）的哈希。树对象保存了该提交的目录和文件信息，并且会记录每个文件的哈希值（文件的内容哈希值）。</li>
+<li>如果你在 <code>git commit</code> 之前修改了文件并通过 <code>git add</code> 将其添加到暂存区，那么这些文件会在树对象中保存为 blob 对象的引用。</li>
+<li>树对象也会存储在 <code>.git/objects/</code> 中，路径为 <code>/.git/objects/&#123;tree-hash&#125;</code>。</li>
 </ul>
-</li>
-<li><p>删除文件</p>
-<p>从版本库中删除</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git rm 文件名</span><br></pre></td></tr></table></figure>
-
-<p>然后再提交</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git commit -m &quot;&quot;</span><br></pre></td></tr></table></figure>
-
-<p>如果本地删除之后，想从版本库中获取，使用</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git checkout -- 文件名</span><br></pre></td></tr></table></figure></li>
+<p><strong>更新 <code>HEAD</code> 文件</strong>：</p>
+<ul>
+<li><code>HEAD</code> 文件指向当前正在工作的分支。在执行 <code>git commit</code> 后，Git 会将当前分支的引用更新为新的提交哈希。</li>
+<li>例如，如果你在 <code>master</code> 分支上进行提交，Git 会更新 <code>.git/refs/heads/master</code> 文件，记录该分支指向的新提交哈希。</li>
+<li><code>.git/HEAD</code> 文件本身通常指向 <code>refs/heads/</code> 下的当前分支。执行 <code>git commit</code> 后，<code>HEAD</code> 会指向新提交的哈希值。</li>
 </ul>
-<h2 id="远程仓库"><a href="#远程仓库" class="headerlink" title="远程仓库"></a>远程仓库</h2><ul>
-<li><p>关联远程库，此时远程库的名字为origin</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git remote add origin 仓库对应的SSH</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>本地内容推送到远程库，将当前master分支推送到远程仓库中</p>
-<p>仓库为空时（-u表示）指定默认本地分支和远程仓库</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git push -u origin master</span><br></pre></td></tr></table></figure>
-
-<p>仓库有内容时</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git push origin master</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>查看远程库信息</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git remote -v</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>删除远程库</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git remote rm origin</span><br></pre></td></tr></table></figure>
-
-<p>本质上是删除了本地和远程库的绑定关系，不是物理上删除了远程库。</p>
-</li>
-<li><p>克隆远程库</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git clone 仓库对应的SSH</span><br></pre></td></tr></table></figure></li>
+<p>**更新 <code>.git/logs/HEAD</code> 和 <code>.git/logs/refs/heads/</code>**：</p>
+<ul>
+<li>Git 会记录提交历史，并将每次提交的引用信息保存在 <code>.git/logs/</code> 目录下。这使得 Git 可以回溯和恢复历史记录。</li>
+<li>文件如 <code>.git/logs/HEAD</code> 和 <code>.git/logs/refs/heads/&#123;branch-name&#125;</code> 会被更新，记录该分支的最新状态。</li>
+<li><code>.git/logs/HEAD</code> 中会保存 HEAD 变动的记录，而 <code>.git/logs/refs/heads/</code> 中会保存该分支的所有提交历史记录。</li>
 </ul>
-<h2 id="分支管理"><a href="#分支管理" class="headerlink" title="分支管理"></a>分支管理</h2><ul>
+<p><strong>更新 <code>.git/index</code>（暂存区）</strong>：</p>
+<ul>
+<li><code>git commit</code> 后，暂存区中的文件会被清空。也就是说，暂存区会恢复到未跟踪的状态，不再保存已提交的更改。</li>
+</ul>
+<h3 id="注：寻找Objects中的信息"><a href="#注：寻找Objects中的信息" class="headerlink" title="注：寻找Objects中的信息"></a>注：寻找Objects中的信息</h3><ol>
+<li><p>通过<code>commit</code>寻找<code>tree</code>信息，每个<code>commit</code>会存储对应的<code>tree id</code></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git cat-file -p commit-id</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>通过tree存储的信息，获取到对应的目录树信息</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git cat-file -p tree-id</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>从tree中活动吗blob的id，通过blob id获取对应的文件内容</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git cat-file -p blob-id</span><br></pre></td></tr></table></figure></li>
+</ol>
+<h3 id="Refs文件存储的内容"><a href="#Refs文件存储的内容" class="headerlink" title="Refs文件存储的内容"></a>Refs文件存储的内容</h3><p>refs的内容<strong>就是对应的commit id</strong>，因此把ref当作指针，指向对应的commit来表示当前ref对应的版本</p>
+<h3 id="分支与标签"><a href="#分支与标签" class="headerlink" title="分支与标签"></a>分支与标签</h3><h4 id="创建分支"><a href="#创建分支" class="headerlink" title="创建分支"></a>创建分支</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git checkout -b</span><br></pre></td></tr></table></figure>
+
+<p>分支一般用于开发阶段，可以通过添加commit进行迭代的</p>
+<ul>
 <li><p>创建并切换到分支</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git checkout -b 分支名</span><br></pre></td></tr></table></figure>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git checkout -b 分支名</span><br></pre></td></tr></table></figure>
 
 <p>创建分支</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git branch 分支名</span><br></pre></td></tr></table></figure>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git branch 分支名</span><br></pre></td></tr></table></figure>
 
 <p>切换到分支</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git checkout 分支名</span><br></pre></td></tr></table></figure>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git checkout 分支名</span><br></pre></td></tr></table></figure>
 </li>
 <li><p>查看当前分支</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git branch</span><br></pre></td></tr></table></figure>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git branch</span><br></pre></td></tr></table></figure>
 </li>
 <li><p>合并分支</p>
 <p>先切换分支</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git checkout 分支</span><br></pre></td></tr></table></figure>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git checkout 分支</span><br></pre></td></tr></table></figure>
 
 <p>注：更为合适的切换分支的命令 switch</p>
 <p>创建并切换到新分支</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git switch -c 分支名</span><br></pre></td></tr></table></figure>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git switch -c 分支名</span><br></pre></td></tr></table></figure>
 
 <p>切换到当前有的分支</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git switch 已有分支名</span><br></pre></td></tr></table></figure>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git switch 已有分支名</span><br></pre></td></tr></table></figure>
 
 <p>合并分支</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git merge 需要合并的分支</span><br></pre></td></tr></table></figure>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git merge 需要合并的分支</span><br></pre></td></tr></table></figure>
 
 <p>合并分支并禁用<code>Fast forward</code>，一般默认<code>Fast forward</code>模式</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git merge --no-ff 需要合并的分支</span><br></pre></td></tr></table></figure>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git merge --no-ff 需要合并的分支</span><br></pre></td></tr></table></figure>
 
 <p>合并分支同时增加提交信息</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git merge -m &quot;提交信息&quot;</span><br></pre></td></tr></table></figure>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git merge -m &quot;提交信息&quot;</span><br></pre></td></tr></table></figure>
 
 <p>删除原有分支</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git branch -d 分支名</span><br></pre></td></tr></table></figure>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git branch -d 分支名</span><br></pre></td></tr></table></figure>
 
 <p>强制删除分支</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git branch -D 分支名</span><br></pre></td></tr></table></figure>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git branch -D 分支名</span><br></pre></td></tr></table></figure>
 </li>
 <li><p>解决冲突</p>
 <p>当git无法自动合并分支时，使用<code>git status</code>可查看冲突的文件，然后手动解决冲突后再提交，可使用如下命令查看分支合并图</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git log --graph</span><br></pre></td></tr></table></figure>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git log --graph</span><br></pre></td></tr></table></figure>
 </li>
 <li><p>分支管理策略</p>
 <p><code>master</code>用于发布稳定版本，<code>dev</code>用于平时修改，团队合作的代码都上传至<code>dev</code>中</p>
@@ -387,40 +441,65 @@
 <p>把本地未push的分叉提交历史整理成直线</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git rebase</span><br></pre></td></tr></table></figure></li>
 </ul>
-<h2 id="标签"><a href="#标签" class="headerlink" title="标签"></a>标签</h2><ul>
+<h4 id="创建标签"><a href="#创建标签" class="headerlink" title="创建标签"></a>创建标签</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git tag</span><br></pre></td></tr></table></figure>
+
+<p>标签一般表示一个稳定版本，指向的commit一般不会变更。</p>
+<ul>
 <li><p>打标签</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git tag 标签名</span><br></pre></td></tr></table></figure>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git tag 标签名</span><br></pre></td></tr></table></figure>
 
 <p> 默认标签是打在最新一次提交中</p>
 </li>
 <li><p>查看已有标签</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git tag</span><br></pre></td></tr></table></figure>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git tag</span><br></pre></td></tr></table></figure>
 </li>
 <li><p>给历史提交打标签</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git tag 标签名 历史提交commit-id</span><br></pre></td></tr></table></figure>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git tag 标签名 历史提交commit-id</span><br></pre></td></tr></table></figure>
 </li>
 <li><p>查看标签信息</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git show 需要查看的标签名</span><br></pre></td></tr></table></figure>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git show 需要查看的标签名</span><br></pre></td></tr></table></figure>
 </li>
 <li><p>创建自带说明的标签</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git tag -a 指定标签名 -m 提交信息 commit-id</span><br></pre></td></tr></table></figure>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git tag -a 指定标签名 -m 提交信息 commit-id</span><br></pre></td></tr></table></figure>
 </li>
 <li><p>删除标签</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git tag -d 需要删除的标签名</span><br></pre></td></tr></table></figure>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git tag -d 需要删除的标签名</span><br></pre></td></tr></table></figure>
 </li>
 <li><p>推送标签</p>
 <p>推送某一个</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git push origin 标签名</span><br></pre></td></tr></table></figure>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git push origin 标签名</span><br></pre></td></tr></table></figure>
 
 <p>一次性推送全部</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git push origin --tags</span><br></pre></td></tr></table></figure>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git push origin --tags</span><br></pre></td></tr></table></figure>
 </li>
 <li><p>删除远程标签</p>
 <p>先删除本地标签</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git tag -d 标签名</span><br></pre></td></tr></table></figure>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git tag -d 标签名</span><br></pre></td></tr></table></figure>
 
 <p>再删除远程标签</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git push origin :refs/tags/标签名</span><br></pre></td></tr></table></figure></li>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git push origin :refs/tags/标签名</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h3 id="修改历史版本"><a href="#修改历史版本" class="headerlink" title="修改历史版本"></a>修改历史版本</h3><h4 id="修改最近一次的commit信息"><a href="#修改最近一次的commit信息" class="headerlink" title="修改最近一次的commit信息"></a>修改最近一次的commit信息</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git commit -amend</span><br></pre></td></tr></table></figure>
+
+<h4 id="修改最近三个的commit信息"><a href="#修改最近三个的commit信息" class="headerlink" title="修改最近三个的commit信息"></a>修改最近三个的commit信息</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git rebase </span><br></pre></td></tr></table></figure>
+
+<h4 id="删除所有提交中的某个文件"><a href="#删除所有提交中的某个文件" class="headerlink" title="删除所有提交中的某个文件"></a>删除所有提交中的某个文件</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git filter -branch</span><br></pre></td></tr></table></figure>
+
+<h3 id="提交到远程仓库"><a href="#提交到远程仓库" class="headerlink" title="提交到远程仓库"></a>提交到远程仓库</h3><h4 id="克隆"><a href="#克隆" class="headerlink" title="克隆"></a>克隆</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git clone</span><br></pre></td></tr></table></figure>
+
+<p>拉取完整的仓库到本地</p>
+<h4 id="拉取"><a href="#拉取" class="headerlink" title="拉取"></a>拉取</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git fetch</span><br></pre></td></tr></table></figure>
+
+<p>将远端的某些分支最新代码拉取到本地，不会执行merge操作</p>
+<p>会修改refs&#x2F;remote的分支信息，如果需要和本地代码合并需要手动操作</p>
+<h4 id="拉取和合并"><a href="#拉取和合并" class="headerlink" title="拉取和合并"></a>拉取和合并</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git pull</span><br></pre></td></tr></table></figure>
+
+<p>相当于<code>git fetch</code>加<code>git merge</code></p>
+<h1 id="Git研发过程——分支管理流-Github-Flow"><a href="#Git研发过程——分支管理流-Github-Flow" class="headerlink" title="Git研发过程——分支管理流-Github Flow"></a>Git研发过程——分支管理流-Github Flow</h1><p>只有一个主干分支，基于Pull Request往主干分支提交代码</p>
+<h2 id="工作流程"><a href="#工作流程" class="headerlink" title="工作流程"></a>工作流程</h2><ul>
+<li>创建一个<code>main</code>主分支</li>
+<li>创建一个<code>feature</code>分支</li>
+<li>创建一个<code>feture</code>到<code>main</code>的Pull Request</li>
 </ul>
 <h2 id="Git与GitHub-实践篇"><a href="#Git与GitHub-实践篇" class="headerlink" title="Git与GitHub(实践篇)"></a>Git与GitHub(实践篇)</h2><p>  先<code>Fork</code>，在自己仓库产生分支，然后<code>pull request</code>推送到原有开源仓库</p>
 <h3 id="Git初始化"><a href="#Git初始化" class="headerlink" title="Git初始化"></a>Git初始化</h3><ul>
@@ -514,6 +593,8 @@
 <li><p>用 <code>git commit</code> 命令提交 <code>.gitignore</code> 文件：</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git commit -m &quot;update ignored files&quot;</span><br></pre></td></tr></table></figure></li>
 </ol>
+<h3 id="补充内容"><a href="#补充内容" class="headerlink" title="补充内容"></a>补充内容</h3><h4 id="查看git文件树"><a href="#查看git文件树" class="headerlink" title="查看git文件树"></a>查看git文件树</h4><p><code>tree .git</code> 命令用于显示 <code>.git</code> 目录中的文件和子目录结构。<code>.git</code> 目录是一个隐藏目录，它包含 Git 仓库的所有元数据，包括配置文件、对象数据库、引用等。</p>
+<h4 id="查看git仓库的对象和内容"><a href="#查看git仓库的对象和内容" class="headerlink" title="查看git仓库的对象和内容"></a>查看git仓库的对象和内容</h4><p><code>git cat-file</code> 命令用于查看 Git 仓库中的对象内容。它可以用来查看 Git 对象（如提交、树、标签等）的详细信息。</p>
 
     </div>
 
@@ -591,7 +672,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9F%BA%E6%9C%AC%E4%BD%BF%E7%94%A8"><span class="nav-number">1.</span> <span class="nav-text">基本使用</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%BF%9C%E7%A8%8B%E4%BB%93%E5%BA%93"><span class="nav-number">2.</span> <span class="nav-text">远程仓库</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%88%86%E6%94%AF%E7%AE%A1%E7%90%86"><span class="nav-number">3.</span> <span class="nav-text">分支管理</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%A0%87%E7%AD%BE"><span class="nav-number">4.</span> <span class="nav-text">标签</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Git%E4%B8%8EGitHub-%E5%AE%9E%E8%B7%B5%E7%AF%87"><span class="nav-number">5.</span> <span class="nav-text">Git与GitHub(实践篇)</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Git%E5%88%9D%E5%A7%8B%E5%8C%96"><span class="nav-number">5.1.</span> <span class="nav-text">Git初始化</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%9C%AC%E5%9C%B0%E5%88%9B%E5%BB%BA%E5%A5%BD%E4%BB%93%E5%BA%93%EF%BC%8C%E6%8E%A8%E9%80%81%E5%88%B0%E8%BF%9C%E7%A8%8B%E4%BB%93%E5%BA%93"><span class="nav-number">5.2.</span> <span class="nav-text">本地创建好仓库，推送到远程仓库</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BB%8EGitHub%E8%BF%9C%E7%A8%8B%E4%BB%93%E5%BA%93%E6%9B%B4%E6%96%B0%E6%9C%AC%E5%9C%B0%E4%BB%A3%E7%A0%81"><span class="nav-number">5.3.</span> <span class="nav-text">从GitHub远程仓库更新本地代码</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Issues"><span class="nav-number">5.4.</span> <span class="nav-text">Issues</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Pull-Request"><span class="nav-number">5.5.</span> <span class="nav-text">Pull Request</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#gitignore%E6%96%87%E4%BB%B6%E2%80%94%E2%80%94%E5%A6%82%E4%BD%95%E5%9C%A8Git%E4%B8%AD%E5%BF%BD%E7%95%A5%E6%96%87%E4%BB%B6%E5%92%8C%E6%96%87%E4%BB%B6%E5%A4%B9"><span class="nav-number">6.</span> <span class="nav-text">.gitignore文件——如何在Git中忽略文件和文件夹</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#gitignore%E6%96%87%E4%BB%B6"><span class="nav-number">6.1.</span> <span class="nav-text">.gitignore文件</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%88%9B%E5%BB%BA-gitignore%E6%96%87%E4%BB%B6"><span class="nav-number">6.2.</span> <span class="nav-text">创建.gitignore文件</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#gitignore%E6%96%87%E4%BB%B6%E5%86%85%E5%AE%B9"><span class="nav-number">6.3.</span> <span class="nav-text">.gitignore文件内容</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%9C%A8Git%E4%B8%AD%E5%BF%BD%E7%95%A5%E4%B8%80%E4%B8%AA%E6%96%87%E4%BB%B6%E6%88%96%E8%80%85%E6%96%87%E4%BB%B6%E5%A4%B9"><span class="nav-number">6.3.1.</span> <span class="nav-text">在Git中忽略一个文件或者文件夹</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%BF%BD%E7%95%A5%E4%BB%A5%E5%89%8D%E6%8F%90%E4%BA%A4%E7%9A%84%E6%96%87%E4%BB%B6"><span class="nav-number">6.3.2.</span> <span class="nav-text">忽略以前提交的文件</span></a></li></ol></li></ol></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Git%E5%8E%9F%E7%90%86"><span class="nav-number">1.</span> <span class="nav-text">Git原理</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Git-%E6%95%B0%E6%8D%AE%E6%A8%A1%E5%9E%8B"><span class="nav-number">1.1.</span> <span class="nav-text">Git 数据模型</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Blob%EF%BC%88%E6%96%87%E4%BB%B6%E5%AF%B9%E8%B1%A1%EF%BC%89"><span class="nav-number">1.1.1.</span> <span class="nav-text">Blob（文件对象）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Tree%EF%BC%88%E6%A0%91%E5%AF%B9%E8%B1%A1%EF%BC%89"><span class="nav-number">1.1.2.</span> <span class="nav-text">Tree（树对象）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Commit%EF%BC%88%E6%8F%90%E4%BA%A4%E5%AF%B9%E8%B1%A1%EF%BC%89"><span class="nav-number">1.1.3.</span> <span class="nav-text">Commit（提交对象）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#tag%EF%BC%88%E6%A0%87%E7%AD%BE%E5%AF%B9%E8%B1%A1%EF%BC%89"><span class="nav-number">1.1.4.</span> <span class="nav-text">tag（标签对象）</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Git-%E5%B7%A5%E4%BD%9C%E6%B5%81%E7%A8%8B"><span class="nav-number">1.2.</span> <span class="nav-text">Git 工作流程</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%B7%A5%E4%BD%9C%E7%9B%AE%E5%BD%95%EF%BC%88Working-Directory%EF%BC%89"><span class="nav-number">1.2.1.</span> <span class="nav-text">工作目录（Working Directory）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%9A%82%E5%AD%98%E5%8C%BA%EF%BC%88Staging-Area%EF%BC%89"><span class="nav-number">1.2.2.</span> <span class="nav-text">暂存区（Staging Area）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%9C%AC%E5%9C%B0%E4%BB%93%E5%BA%93%EF%BC%88Repository%EF%BC%89"><span class="nav-number">1.2.3.</span> <span class="nav-text">本地仓库（Repository）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%BF%9C%E7%A8%8B%E4%BB%93%E5%BA%93%EF%BC%88Remote-Repository%EF%BC%89"><span class="nav-number">1.2.4.</span> <span class="nav-text">远程仓库（Remote Repository）</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Git%E5%91%BD%E4%BB%A4"><span class="nav-number">2.</span> <span class="nav-text">Git命令</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Git%E9%85%8D%E7%BD%AE"><span class="nav-number">2.1.</span> <span class="nav-text">Git配置</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%88%9D%E5%A7%8B%E5%8C%96%E4%BB%93%E5%BA%93"><span class="nav-number">2.1.1.</span> <span class="nav-text">初始化仓库</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%9F%A5%E7%9C%8Bgit%E6%96%87%E4%BB%B6%E7%9B%AE%E5%BD%95"><span class="nav-number">2.1.2.</span> <span class="nav-text">查看git文件目录</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%85%8D%E7%BD%AEgit"><span class="nav-number">2.1.3.</span> <span class="nav-text">配置git</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%85%8D%E7%BD%AE%E8%BF%9C%E7%A8%8B%E4%BB%93%E5%BA%93"><span class="nav-number">2.1.4.</span> <span class="nav-text">配置远程仓库</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%9F%A5%E7%9C%8B%E8%BF%9C%E7%A8%8B%E4%BB%93%E5%BA%93"><span class="nav-number">2.1.4.1.</span> <span class="nav-text">查看远程仓库</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%B7%BB%E5%8A%A0%E8%BF%9C%E7%A8%8B%E4%BB%93%E5%BA%93"><span class="nav-number">2.1.4.2.</span> <span class="nav-text">添加远程仓库</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%8F%90%E4%BA%A4%E4%BB%A3%E7%A0%81"><span class="nav-number">2.2.</span> <span class="nav-text">提交代码</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%B7%BB%E5%8A%A0%E6%96%87%E4%BB%B6%E8%87%B3%E6%9A%82%E5%AD%98%E5%8C%BA"><span class="nav-number">2.2.1.</span> <span class="nav-text">添加文件至暂存区</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%8F%90%E4%BA%A4%E6%96%87%E4%BB%B6"><span class="nav-number">2.2.2.</span> <span class="nav-text">提交文件</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%B3%A8%EF%BC%9A%E5%AF%BB%E6%89%BEObjects%E4%B8%AD%E7%9A%84%E4%BF%A1%E6%81%AF"><span class="nav-number">2.2.3.</span> <span class="nav-text">注：寻找Objects中的信息</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Refs%E6%96%87%E4%BB%B6%E5%AD%98%E5%82%A8%E7%9A%84%E5%86%85%E5%AE%B9"><span class="nav-number">2.2.4.</span> <span class="nav-text">Refs文件存储的内容</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%88%86%E6%94%AF%E4%B8%8E%E6%A0%87%E7%AD%BE"><span class="nav-number">2.2.5.</span> <span class="nav-text">分支与标签</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%88%9B%E5%BB%BA%E5%88%86%E6%94%AF"><span class="nav-number">2.2.5.1.</span> <span class="nav-text">创建分支</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%88%9B%E5%BB%BA%E6%A0%87%E7%AD%BE"><span class="nav-number">2.2.5.2.</span> <span class="nav-text">创建标签</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BF%AE%E6%94%B9%E5%8E%86%E5%8F%B2%E7%89%88%E6%9C%AC"><span class="nav-number">2.2.6.</span> <span class="nav-text">修改历史版本</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%BF%AE%E6%94%B9%E6%9C%80%E8%BF%91%E4%B8%80%E6%AC%A1%E7%9A%84commit%E4%BF%A1%E6%81%AF"><span class="nav-number">2.2.6.1.</span> <span class="nav-text">修改最近一次的commit信息</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%BF%AE%E6%94%B9%E6%9C%80%E8%BF%91%E4%B8%89%E4%B8%AA%E7%9A%84commit%E4%BF%A1%E6%81%AF"><span class="nav-number">2.2.6.2.</span> <span class="nav-text">修改最近三个的commit信息</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%88%A0%E9%99%A4%E6%89%80%E6%9C%89%E6%8F%90%E4%BA%A4%E4%B8%AD%E7%9A%84%E6%9F%90%E4%B8%AA%E6%96%87%E4%BB%B6"><span class="nav-number">2.2.6.3.</span> <span class="nav-text">删除所有提交中的某个文件</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%8F%90%E4%BA%A4%E5%88%B0%E8%BF%9C%E7%A8%8B%E4%BB%93%E5%BA%93"><span class="nav-number">2.2.7.</span> <span class="nav-text">提交到远程仓库</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%85%8B%E9%9A%86"><span class="nav-number">2.2.7.1.</span> <span class="nav-text">克隆</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%8B%89%E5%8F%96"><span class="nav-number">2.2.7.2.</span> <span class="nav-text">拉取</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%8B%89%E5%8F%96%E5%92%8C%E5%90%88%E5%B9%B6"><span class="nav-number">2.2.7.3.</span> <span class="nav-text">拉取和合并</span></a></li></ol></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Git%E7%A0%94%E5%8F%91%E8%BF%87%E7%A8%8B%E2%80%94%E2%80%94%E5%88%86%E6%94%AF%E7%AE%A1%E7%90%86%E6%B5%81-Github-Flow"><span class="nav-number">3.</span> <span class="nav-text">Git研发过程——分支管理流-Github Flow</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%B7%A5%E4%BD%9C%E6%B5%81%E7%A8%8B"><span class="nav-number">3.1.</span> <span class="nav-text">工作流程</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Git%E4%B8%8EGitHub-%E5%AE%9E%E8%B7%B5%E7%AF%87"><span class="nav-number">3.2.</span> <span class="nav-text">Git与GitHub(实践篇)</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Git%E5%88%9D%E5%A7%8B%E5%8C%96"><span class="nav-number">3.2.1.</span> <span class="nav-text">Git初始化</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%9C%AC%E5%9C%B0%E5%88%9B%E5%BB%BA%E5%A5%BD%E4%BB%93%E5%BA%93%EF%BC%8C%E6%8E%A8%E9%80%81%E5%88%B0%E8%BF%9C%E7%A8%8B%E4%BB%93%E5%BA%93"><span class="nav-number">3.2.2.</span> <span class="nav-text">本地创建好仓库，推送到远程仓库</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BB%8EGitHub%E8%BF%9C%E7%A8%8B%E4%BB%93%E5%BA%93%E6%9B%B4%E6%96%B0%E6%9C%AC%E5%9C%B0%E4%BB%A3%E7%A0%81"><span class="nav-number">3.2.3.</span> <span class="nav-text">从GitHub远程仓库更新本地代码</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Issues"><span class="nav-number">3.2.4.</span> <span class="nav-text">Issues</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Pull-Request"><span class="nav-number">3.2.5.</span> <span class="nav-text">Pull Request</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#gitignore%E6%96%87%E4%BB%B6%E2%80%94%E2%80%94%E5%A6%82%E4%BD%95%E5%9C%A8Git%E4%B8%AD%E5%BF%BD%E7%95%A5%E6%96%87%E4%BB%B6%E5%92%8C%E6%96%87%E4%BB%B6%E5%A4%B9"><span class="nav-number">3.3.</span> <span class="nav-text">.gitignore文件——如何在Git中忽略文件和文件夹</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#gitignore%E6%96%87%E4%BB%B6"><span class="nav-number">3.3.1.</span> <span class="nav-text">.gitignore文件</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%88%9B%E5%BB%BA-gitignore%E6%96%87%E4%BB%B6"><span class="nav-number">3.3.2.</span> <span class="nav-text">创建.gitignore文件</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#gitignore%E6%96%87%E4%BB%B6%E5%86%85%E5%AE%B9"><span class="nav-number">3.3.3.</span> <span class="nav-text">.gitignore文件内容</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%9C%A8Git%E4%B8%AD%E5%BF%BD%E7%95%A5%E4%B8%80%E4%B8%AA%E6%96%87%E4%BB%B6%E6%88%96%E8%80%85%E6%96%87%E4%BB%B6%E5%A4%B9"><span class="nav-number">3.3.3.1.</span> <span class="nav-text">在Git中忽略一个文件或者文件夹</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%BF%BD%E7%95%A5%E4%BB%A5%E5%89%8D%E6%8F%90%E4%BA%A4%E7%9A%84%E6%96%87%E4%BB%B6"><span class="nav-number">3.3.3.2.</span> <span class="nav-text">忽略以前提交的文件</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%A1%A5%E5%85%85%E5%86%85%E5%AE%B9"><span class="nav-number">3.3.4.</span> <span class="nav-text">补充内容</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%9F%A5%E7%9C%8Bgit%E6%96%87%E4%BB%B6%E6%A0%91"><span class="nav-number">3.3.4.1.</span> <span class="nav-text">查看git文件树</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%9F%A5%E7%9C%8Bgit%E4%BB%93%E5%BA%93%E7%9A%84%E5%AF%B9%E8%B1%A1%E5%92%8C%E5%86%85%E5%AE%B9"><span class="nav-number">3.3.4.2.</span> <span class="nav-text">查看git仓库的对象和内容</span></a></li></ol></li></ol></li></ol></li></ol></div>
       </div>
       <!--/noindex-->
 
